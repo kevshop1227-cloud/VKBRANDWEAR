@@ -5,7 +5,7 @@ from datetime import datetime
 import time
 
 # --- CONFIGURACIÓN Y ESTILOS ---
-URL_API = "TU_URL_DE_APPS_SCRIPT_AQUI" # <--- ¡PEGA TU URL AQUÍ!
+URL_API =https://script.google.com/macros/s/AKfycbzVJV038RRhcx66xnFSCgVSLSa_-mXgu9yxT5tk_il6ehYBdhc9clRgXewcks4U_6Nf/exec
 
 st.set_page_config(page_title="VK BRANDWEAR", page_icon="💖", layout="wide")
 
