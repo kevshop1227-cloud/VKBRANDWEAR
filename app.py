@@ -16,86 +16,76 @@ MESES_ES = {
     "October": "Octubre", "November": "Noviembre", "December": "Diciembre"
 }
 
-# --- DISEÑO DE ALTA GAMA VK (CSS) ---
+# --- DISEÑO DE ALTA GAMA VK (CSS CORREGIDO) ---
 st.markdown(f"""
     <style>
     /* Fuente Segoe UI General */
     .stApp {{
         background-color: #FDFDFD;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-family: 'Segoe UI', sans-serif;
     }}
     
     /* Sidebar Rosa VK */
     [data-testid="stSidebar"] {{
         background-color: #FF75A0; 
-        color: white;
     }}
 
-    /* CENTRADO DE LOGO EN SIDEBAR */
-    .logo-container {{
-        display: flex;
-        justify-content: center;
-        width: 100%;
-        margin-top: -80px !important;
-        margin-bottom: -5px !important;
+    /* LOGO Y NOMBRE JUNTOS AL TOPE */
+    .header-sidebar {{
+        text-align: center;
+        margin-top: -90px !important;
+        margin-bottom: 20px !important;
     }}
     
-    [data-testid="stSidebar"] img {{
-        width: 110px !important;
+    .header-sidebar img {{
+        width: 100px !important;
+        margin-bottom: 5px;
     }}
-
-    /* Nombre de la marca */
+    
     .sidebar-brand {{
         font-family: 'Segoe UI', sans-serif;
-        font-size: 24px !important;
+        font-size: 20px !important;
         color: white !important;
-        text-align: center !important;
         font-weight: 800;
         letter-spacing: 1.5px;
-        margin-top: 0px !important;
-        margin-bottom: 25px !important;
         text-transform: uppercase;
+        margin: 0;
     }}
 
-    /* --- ESTILO DEL MENÚ (COMO EL BOTÓN QUE PEDISTE) --- */
+    /* --- ESTILO DE BOTONES BLANCOS REDONDEADOS (SIDEBAR) --- */
     [data-testid="stSidebar"] .stRadio div[role="radiogroup"] {{
-        gap: 15px; /* Espacio entre botones */
+        gap: 10px;
+        padding-top: 20px;
     }}
 
-    /* Estilo de cada "botón" del menú */
     [data-testid="stSidebar"] .stRadio div[role="radiogroup"] label {{
-        background-color: white !important; /* Fondo blanco */
-        color: #FF75A0 !important; /* Texto rosado */
-        border-radius: 30px !important; /* Muy redondeado como el ejemplo */
-        padding: 10px 20px !important;
+        background-color: white !important;
+        color: #FF75A0 !important;
+        border-radius: 50px !important; /* Bordes muy redondos */
+        padding: 6px 15px !important;
         font-weight: 700 !important;
+        font-size: 13px !important; /* Letra más pequeña */
         width: 100% !important;
         border: none !important;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        cursor: pointer;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        display: flex;
+        justify-content: center; /* Texto centrado */
+        text-align: center;
     }}
 
-    /* Ocultar el circulito feo del radio button */
+    /* Quitar el punto de selección */
     [data-testid="stSidebar"] .stRadio div[role="radiogroup"] label div:first-child {{
         display: none !important;
     }}
 
-    /* Alineación del texto e icono dentro del botón */
-    [data-testid="stSidebar"] .stRadio div[role="radiogroup"] label div[data-testid="stMarkdownContainer"] p {{
-        margin-left: 0px !important;
-        font-size: 14px !important;
-    }}
-
-    /* Color cuando pasas el mouse (efecto hover) */
+    /* Hover de los botones */
     [data-testid="stSidebar"] .stRadio div[role="radiogroup"] label:hover {{
-        background-color: #FFF0F5 !important;
-        transform: scale(1.02);
+        background-color: #FFF5F7 !important;
+        transform: scale(1.03);
         transition: 0.2s;
     }}
 
-    /* --- FIN ESTILO MENÚ --- */
-
-    /* Contenedor de Apartados Blanco */
+    /* --- FORMULARIO Y TABLA --- */
     .stContainer {{
         background-color: #FFFFFF !important;
         padding: 30px;
@@ -104,15 +94,13 @@ st.markdown(f"""
         border: 1px solid #F0F0F0;
     }}
 
-    /* Nombre de los apartados del formulario (rosado) */
     label[data-testid="stWidgetLabel"] p {{
         color: #FF75A0 !important;
         font-weight: 700 !important;
-        font-size: 15px !important;
+        font-size: 14px !important;
         text-transform: uppercase;
     }}
     
-    /* Botón AGREGAR */
     div.stButton > button:first-child {{
         background-color: #FF75A0 !important;
         color: white !important;
@@ -120,34 +108,31 @@ st.markdown(f"""
         font-weight: 700 !important;
     }}
 
-    .main-title {{
-        font-size: 28px !important;
-        font-weight: 800 !important;
-        color: #333;
-    }}
+    .main-title {{ font-size: 28px !important; font-weight: 800; color: #333; }}
     </style>
     """, unsafe_allow_html=True)
 
 # --- SIDEBAR ---
 with st.sidebar:
-    st.markdown('<div class="logo-container">', unsafe_allow_html=True)
+    # Logo y Marca juntos al tope
+    st.markdown('<div class="header-sidebar">', unsafe_allow_html=True)
     try:
         st.image("Logo VK NEW blanco.PNG") 
     except:
         st.write("💎")
+    st.markdown('<p class="sidebar-brand">VK Brandwear</p>', unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
     
-    st.markdown('<p class="sidebar-brand">VK Brandwear</p>', unsafe_allow_html=True)
     st.write("---")
     
-    # Menú con iconos integrados al lado izquierdo
+    # Menú con iconos y nombres corregidos (CENTRADOS)
     menu = st.radio(
         "Navegación", 
-        ["📈 INVERSIONES", "🛍️ VENTAS", "💰 GASTOS", "📊 DASHBOARD"], 
+        ["📈 Inversiones", "🛍️ Ventas", "💰 Gastos", "🔄 Reinversiones", "📊 Dashboard"], 
         label_visibility="collapsed"
     )
 
-# --- LÓGICA DE CARGA DE DATOS ---
+# --- CARGA DE DATOS ---
 df_full = pd.DataFrame()
 try:
     response = requests.post(URL_API, json={"action": "leer_inventario"}, timeout=15)
@@ -161,7 +146,7 @@ except:
     pass
 
 # --- MÓDULO INVERSIONES ---
-if "INVERSIONES" in menu:
+if "Inversiones" in menu:
     col_icon, col_txt = st.columns([0.06, 0.94])
     with col_icon:
         try:
@@ -178,13 +163,13 @@ if "INVERSIONES" in menu:
         with c1:
             fecha_in = st.date_input("🗓️ Fecha", datetime.now())
         with c2:
-            prenda = st.text_input("👗 Nombre prenda", placeholder="Ej: SHORT NEGRO LAZO").upper()
+            prenda = st.text_input("👗 Nombre prenda", placeholder="EJ: SHORT NEGRO").upper()
         with c3:
             cantidad = st.number_input("📦 Cantidad", min_value=1, step=1)
             
         c4, c5, c6 = st.columns(3)
         with c4:
-            categoria = st.selectbox("🏷️ Categoría", ["SHORTS", "TOPS", "ENTERIZOS", "BODYS", "LEGGINS", "CHAQUETAS", "VESTIDOS", "BLUSAS"])
+            categoria = st.selectbox("🏷️ Categoría", ["SHORTS", "TOPS", "ENTERIZOS", "BODYS", "LEGGINS", "VESTIDOS"])
         with c5:
             talla = st.selectbox("📏 Talla", ["XS", "S", "M", "L", "XL", "TALLA UNICA"])
         with c6:
@@ -234,5 +219,3 @@ if "INVERSIONES" in menu:
                         fila = df_full.iloc[i]
                         requests.post(URL_API, json={"action": "eliminar_inversion", "prenda": fila["NOMBRE PRENDA"], "talla": fila["TALLA"], "fecha": fila["FECHA_RAW"]})
                     st.rerun()
-    else:
-        st.info("No hay registros aún.")
