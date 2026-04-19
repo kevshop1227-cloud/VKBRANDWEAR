@@ -19,9 +19,7 @@ MESES_ES = {
 # --- DISEÑO DE ALTA GAMA VK (CSS) ---
 st.markdown(f"""
     <style>
-    /* Fuente Segoe UI para toda la app y la marca */
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
-    
+    /* Fuente Segoe UI General */
     .stApp {{
         background-color: #FDFDFD;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -33,110 +31,90 @@ st.markdown(f"""
         color: white;
     }}
 
-    /* CENTRADO DE SIDEBAR */
-    [data-testid="stSidebar"] [data-testid="stVerticalBlock"] {{
-        text-align: center !important;
-        align-items: center !important;
-    }}
-
-    /* Contenedor del Logo: Mucho más arriba y centrado */
+    /* CENTRADO DE LOGO EN SIDEBAR */
     .logo-container {{
         display: flex;
         justify-content: center;
         width: 100%;
-        margin-top: -80px !important; /* Lo sube casi al borde superior */
-        margin-bottom: -10px !important;
+        margin-top: -80px !important;
+        margin-bottom: -5px !important;
     }}
     
     [data-testid="stSidebar"] img {{
         width: 110px !important;
     }}
 
-    /* Nombre de la marca: Segoe UI, debajo del logo */
+    /* Nombre de la marca en Segoe UI */
     .sidebar-brand {{
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-family: 'Segoe UI', sans-serif;
         font-size: 24px !important;
         color: white !important;
         text-align: center !important;
         width: 100%;
-        font-weight: 700;
-        letter-spacing: 1px;
+        font-weight: 800;
+        letter-spacing: 1.5px;
         margin-top: 0px !important;
         margin-bottom: 25px !important;
         display: block;
         text-transform: uppercase;
     }}
 
-    /* Contenedores Blancos Redondeados */
+    /* CONTENEDOR DE APARTADOS (BLANCO) */
     .stContainer {{
-        background-color: #FFFFFF;
-        padding: 25px;
+        background-color: #FFFFFF !important;
+        padding: 30px;
         border-radius: 20px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         border: 1px solid #F0F0F0;
     }}
+
+    /* NOMBRE DE LOS APARTADOS (ROSADO) */
+    label[data-testid="stWidgetLabel"] p {{
+        color: #FF75A0 !important;
+        font-weight: 700 !important;
+        font-size: 15px !important;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }}
     
-    /* UNIFORMIDAD DE INPUTS */
+    /* Inputs uniformes */
     .stInput input, .stSelectbox div[role="button"], .stDateInput div[data-baseweb="input"], .stNumberInput input {{
         border-radius: 12px !important;
         border: 1px solid #EEE !important;
         height: 42px !important;
-        background-color: #F9F9F9 !important;
+        background-color: #FAFAFA !important;
     }}
 
-    /* Botones Estilizados */
+    /* Botones */
     div.stButton > button:first-child {{
         background-color: #FF75A0 !important;
         color: white !important;
         border-radius: 25px !important;
         padding: 10px 40px !important;
-        font-weight: 600 !important;
+        font-weight: 700 !important;
         border: none !important;
     }}
 
-    .stButton>button[kind="secondary"] {{
-        background-color: #FF1493 !important;
-        color: white !important;
-        border-radius: 25px !important;
-    }}
-
-    /* Encabezado Principal */
+    /* Título principal */
     .main-title {{
         font-size: 28px !important;
-        font-weight: 700 !important;
+        font-weight: 800 !important;
         color: #333;
         margin: 0 !important;
-    }}
-    
-    /* Card del Total Invertido */
-    .total-card {{
-        background-color: #FFF0F5;
-        padding: 12px 25px;
-        border-radius: 15px;
-        text-align: center;
-        color: #FF75A0;
-        font-weight: 600;
-        border: 1px solid #FFD1DC;
-        display: inline-block;
-        margin-top: 20px;
     }}
     </style>
     """, unsafe_allow_html=True)
 
 # --- SIDEBAR ---
 with st.sidebar:
-    # 1. Logo (Subido y centrado)
     st.markdown('<div class="logo-container">', unsafe_allow_html=True)
     try:
-        # Asegúrate de que el nombre sea exacto como en GitHub
         st.image("Logo VK NEW blanco.PNG") 
     except:
         st.write("💎")
     st.markdown('</div>', unsafe_allow_html=True)
     
-    # 2. Nombre de la marca (Segoe UI)
     st.markdown('<p class="sidebar-brand">VK Brandwear</p>', unsafe_allow_html=True)
-    
     st.write("---")
     menu = st.radio("Navegación", ["INVERSIONES", "VENTAS", "GASTOS", "DASHBOARD"], label_visibility="collapsed")
 
@@ -155,7 +133,7 @@ except:
 
 # --- MÓDULO INVERSIONES ---
 if menu == "INVERSIONES":
-    # Encabezado corregido para que el icono salga siempre
+    # Cabecera
     col_icon, col_txt = st.columns([0.06, 0.94])
     with col_icon:
         try:
@@ -167,13 +145,13 @@ if menu == "INVERSIONES":
 
     st.write("")
 
-    # Formulario Simétrico
+    # APARTADOS CON LOGOS PEQUEÑOS Y LETRA ROSADA
     with st.container():
         c1, c2, c3 = st.columns(3)
         with c1:
             fecha_in = st.date_input("🗓️ Fecha", datetime.now())
         with c2:
-            prenda = st.text_input("👗 Nombre prenda", placeholder="Ej: Short Negro Lazo").upper()
+            prenda = st.text_input("👗 Nombre prenda", placeholder="Ej: SHORT NEGRO LAZO").upper()
         with c3:
             cantidad = st.number_input("📦 Cantidad", min_value=1, step=1)
             
@@ -219,7 +197,7 @@ if menu == "INVERSIONES":
         )
 
         total_inv = df_full['COSTO TOTAL'].sum()
-        st.markdown(f'<div class="total-card">🛍️ Total invertido: ${total_inv:,.0f}</div>', unsafe_allow_html=True)
+        st.markdown(f'<div style="background-color: #FFF0F5; padding: 12px 25px; border-radius: 15px; text-align: center; color: #FF75A0; font-weight: 700; border: 1px solid #FFD1DC; display: inline-block; margin-top: 20px;">🛍️ Total invertido: ${total_inv:,.0f}</div>', unsafe_allow_html=True)
 
         filas_selec = seleccion.selection.rows
         if filas_selec:
