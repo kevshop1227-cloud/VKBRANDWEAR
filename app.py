@@ -16,15 +16,15 @@ MESES_ES = {
     "October": "Octubre", "November": "Noviembre", "December": "Diciembre"
 }
 
-# --- DISEÑO DE LUJO VK (CSS) ---
+# --- DISEÑO DE ALTA GAMA VK (CSS) ---
 st.markdown(f"""
     <style>
-    /* Importar Fuentes: Poppins y Alex Brush (Opción A) */
-    @import url('https://fonts.googleapis.com/css2?family=Alex+Brush&family=Poppins:wght@300;400;600&display=swap');
+    /* Fuente Segoe UI para toda la app y la marca */
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
     
     .stApp {{
         background-color: #FDFDFD;
-        font-family: 'Poppins', sans-serif;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }}
     
     /* Sidebar Rosa VK */
@@ -39,29 +39,32 @@ st.markdown(f"""
         align-items: center !important;
     }}
 
-    /* Contenedor del Logo: Arriba y Centrado */
+    /* Contenedor del Logo: Mucho más arriba y centrado */
     .logo-container {{
         display: flex;
         justify-content: center;
         width: 100%;
-        margin-top: -50px !important; /* Sube el logo al tope */
-        margin-bottom: 0px !important;
+        margin-top: -80px !important; /* Lo sube casi al borde superior */
+        margin-bottom: -10px !important;
     }}
     
     [data-testid="stSidebar"] img {{
-        width: 115px !important;
+        width: 110px !important;
     }}
 
-    /* Nombre de la marca: Debajo del logo, fuente Alex Brush */
+    /* Nombre de la marca: Segoe UI, debajo del logo */
     .sidebar-brand {{
-        font-family: 'Alex Brush', cursive;
-        font-size: 42px !important;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-size: 24px !important;
         color: white !important;
         text-align: center !important;
         width: 100%;
-        margin-top: -10px !important;
-        margin-bottom: 20px !important;
+        font-weight: 700;
+        letter-spacing: 1px;
+        margin-top: 0px !important;
+        margin-bottom: 25px !important;
         display: block;
+        text-transform: uppercase;
     }}
 
     /* Contenedores Blancos Redondeados */
@@ -73,7 +76,7 @@ st.markdown(f"""
         border: 1px solid #F0F0F0;
     }}
     
-    /* UNIFORMIDAD DE INPUTS: Misma altura y estilo */
+    /* UNIFORMIDAD DE INPUTS */
     .stInput input, .stSelectbox div[role="button"], .stDateInput div[data-baseweb="input"], .stNumberInput input {{
         border-radius: 12px !important;
         border: 1px solid #EEE !important;
@@ -89,7 +92,6 @@ st.markdown(f"""
         padding: 10px 40px !important;
         font-weight: 600 !important;
         border: none !important;
-        box-shadow: 0 4px 10px rgba(255,117,160,0.3);
     }}
 
     .stButton>button[kind="secondary"] {{
@@ -98,23 +100,12 @@ st.markdown(f"""
         border-radius: 25px !important;
     }}
 
-    /* Encabezado Principal Compacto */
-    .header-container {{
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        margin-bottom: 25px;
-    }}
-    
-    .header-container img {{
-        width: 40px !important;
-    }}
-    
-    .header-container h1 {{
+    /* Encabezado Principal */
+    .main-title {{
         font-size: 28px !important;
+        font-weight: 700 !important;
         color: #333;
         margin: 0 !important;
-        padding: 0 !important;
     }}
     
     /* Card del Total Invertido */
@@ -134,15 +125,16 @@ st.markdown(f"""
 
 # --- SIDEBAR ---
 with st.sidebar:
-    # 1. Logo (Al tope y centrado)
+    # 1. Logo (Subido y centrado)
     st.markdown('<div class="logo-container">', unsafe_allow_html=True)
     try:
+        # Asegúrate de que el nombre sea exacto como en GitHub
         st.image("Logo VK NEW blanco.PNG") 
     except:
         st.write("💎")
     st.markdown('</div>', unsafe_allow_html=True)
     
-    # 2. Nombre de la marca (Debajo del logo, fuente cursiva)
+    # 2. Nombre de la marca (Segoe UI)
     st.markdown('<p class="sidebar-brand">VK Brandwear</p>', unsafe_allow_html=True)
     
     st.write("---")
@@ -163,17 +155,20 @@ except:
 
 # --- MÓDULO INVERSIONES ---
 if menu == "INVERSIONES":
-    # Título con icono pequeño y pegado
-    st.markdown(f"""
-        <div class="header-container">
-            <img src="https://raw.githubusercontent.com/{st.secrets.get('github_user', 'TU_USER')}/{st.secrets.get('github_repo', 'TU_REPO')}/main/INVERSIONES.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3502/3502688.png'">
-            <h1>Registro de Inversiones</h1>
-        </div>
-        """, unsafe_allow_html=True)
+    # Encabezado corregido para que el icono salga siempre
+    col_icon, col_txt = st.columns([0.06, 0.94])
+    with col_icon:
+        try:
+            st.image("INVERSIONES.png", width=45)
+        except:
+            st.write("📁")
+    with col_txt:
+        st.markdown('<p class="main-title">Registro de Inversiones</p>', unsafe_allow_html=True)
 
-    # Formulario Symmetrical (3 columnas x 2 filas)
+    st.write("")
+
+    # Formulario Simétrico
     with st.container():
-        # Fila 1
         c1, c2, c3 = st.columns(3)
         with c1:
             fecha_in = st.date_input("🗓️ Fecha", datetime.now())
@@ -182,7 +177,6 @@ if menu == "INVERSIONES":
         with c3:
             cantidad = st.number_input("📦 Cantidad", min_value=1, step=1)
             
-        # Fila 2
         c4, c5, c6 = st.columns(3)
         with c4:
             categoria = st.selectbox("🏷️ Categoría", ["SHORTS", "TOPS", "ENTERIZOS", "BODYS", "LEGGINS", "CHAQUETAS", "VESTIDOS", "BLUSAS"])
