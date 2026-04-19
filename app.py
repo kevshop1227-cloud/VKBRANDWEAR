@@ -16,112 +16,129 @@ MESES_ES = {
     "October": "Octubre", "November": "Noviembre", "December": "Diciembre"
 }
 
-# --- DISEÑO DE ALTA GAMA VK (CSS DEFINITIVO) ---
+# --- DISEÑO DE ALTA GAMA VK (CSS) ---
 st.markdown(f"""
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Alex+Brush&family=Poppins:wght@400;700&display=swap');
+    /* Fuente Segoe UI para toda la app y la marca */
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
     
     .stApp {{
         background-color: #FDFDFD;
-        font-family: 'Segoe UI', sans-serif;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }}
     
     /* Sidebar Rosa VK */
     [data-testid="stSidebar"] {{
         background-color: #FF75A0; 
+        color: white;
     }}
 
-    /* Cabecera Sidebar: Logo y Nombre */
-    .header-sidebar {{
-        text-align: center;
-        margin-top: -80px !important;
+    /* CENTRADO DE SIDEBAR */
+    [data-testid="stSidebar"] [data-testid="stVerticalBlock"] {{
+        text-align: center !important;
+        align-items: center !important;
+    }}
+
+    /* Contenedor del Logo: Mucho más arriba y centrado */
+    .logo-container {{
+        display: flex;
+        justify-content: center;
         width: 100%;
+        margin-top: -80px !important; /* Lo sube casi al borde superior */
+        margin-bottom: -10px !important;
     }}
     
+    [data-testid="stSidebar"] img {{
+        width: 110px !important;
+    }}
+
+    /* Nombre de la marca: Segoe UI, debajo del logo */
     .sidebar-brand {{
-        font-family: 'Alex Brush', cursive;
-        font-size: 50px !important;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-size: 24px !important;
         color: white !important;
-        margin-top: -10px !important;
-        margin-bottom: 20px !important;
-        text-align: center;
-        display: block;
-    }}
-
-    /* --- MENÚ DE BOTONES LARGOS (PÍLDORAS BLANCAS) --- */
-    [data-testid="stSidebar"] .stRadio div[role="radiogroup"] {{
-        gap: 12px;
+        text-align: center !important;
         width: 100%;
+        font-weight: 700;
+        letter-spacing: 1px;
+        margin-top: 0px !important;
+        margin-bottom: 25px !important;
+        display: block;
+        text-transform: uppercase;
     }}
 
-    [data-testid="stSidebar"] .stRadio div[role="radiogroup"] label {{
-        background-color: white !important;
-        color: #FF75A0 !important;
-        border-radius: 50px !important;
-        padding: 12px 20px !important;
-        width: 100% !important;
-        font-weight: 700 !important;
-        font-size: 16px !important;
-        border: none !important;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        display: flex !important;
-        align-items: center !important;
-        cursor: pointer;
-    }}
-
-    [data-testid="stSidebar"] .stRadio div[role="radiogroup"] label div:first-child {{
-        display: none !important;
-    }}
-
-    [data-testid="stSidebar"] .stRadio div[role="radiogroup"] label p {{
-        margin: 0 !important;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }}
-
-    /* --- FORMULARIO Y APARTADOS --- */
+    /* Contenedores Blancos Redondeados */
     .stContainer {{
-        background-color: #FFFFFF !important;
+        background-color: #FFFFFF;
         padding: 25px;
         border-radius: 20px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.04);
         border: 1px solid #F0F0F0;
     }}
-
-    label[data-testid="stWidgetLabel"] p {{
-        color: #FF75A0 !important;
-        font-weight: 700 !important;
-        text-transform: uppercase;
-        font-size: 14px !important;
-    }}
-
+    
+    /* UNIFORMIDAD DE INPUTS */
     .stInput input, .stSelectbox div[role="button"], .stDateInput div[data-baseweb="input"], .stNumberInput input {{
-        height: 42px !important;
         border-radius: 12px !important;
+        border: 1px solid #EEE !important;
+        height: 42px !important;
+        background-color: #F9F9F9 !important;
     }}
 
-    .main-title {{ font-size: 28px !important; font-weight: 800; color: #333; }}
+    /* Botones Estilizados */
+    div.stButton > button:first-child {{
+        background-color: #FF75A0 !important;
+        color: white !important;
+        border-radius: 25px !important;
+        padding: 10px 40px !important;
+        font-weight: 600 !important;
+        border: none !important;
+    }}
+
+    .stButton>button[kind="secondary"] {{
+        background-color: #FF1493 !important;
+        color: white !important;
+        border-radius: 25px !important;
+    }}
+
+    /* Encabezado Principal */
+    .main-title {{
+        font-size: 28px !important;
+        font-weight: 700 !important;
+        color: #333;
+        margin: 0 !important;
+    }}
+    
+    /* Card del Total Invertido */
+    .total-card {{
+        background-color: #FFF0F5;
+        padding: 12px 25px;
+        border-radius: 15px;
+        text-align: center;
+        color: #FF75A0;
+        font-weight: 600;
+        border: 1px solid #FFD1DC;
+        display: inline-block;
+        margin-top: 20px;
+    }}
     </style>
     """, unsafe_allow_html=True)
 
 # --- SIDEBAR ---
 with st.sidebar:
-    st.markdown('<div class="header-sidebar">', unsafe_allow_html=True)
+    # 1. Logo (Subido y centrado)
+    st.markdown('<div class="logo-container">', unsafe_allow_html=True)
     try:
-        st.image("Logo VK NEW blanco.PNG", width=110) 
+        # Asegúrate de que el nombre sea exacto como en GitHub
+        st.image("Logo VK NEW blanco.PNG") 
     except:
         st.write("💎")
-    st.markdown(f'<p class="sidebar-brand">VK Brandwear</p>', unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
     
-    st.write("---")
+    # 2. Nombre de la marca (Segoe UI)
+    st.markdown('<p class="sidebar-brand">VK Brandwear</p>', unsafe_allow_html=True)
     
-    menu = st.radio(
-        "Navegación", 
-        ["📈 INVERSIONES", "🛍️ VENTAS", "💰 GASTOS", "🔄 REINVERSIONES", "📊 DASHBOARD"], 
-        label_visibility="collapsed"
-    )
+    st.write("---")
+    menu = st.radio("Navegación", ["INVERSIONES", "VENTAS", "GASTOS", "DASHBOARD"], label_visibility="collapsed")
 
 # --- CARGA DE DATOS ---
 df_full = pd.DataFrame()
@@ -137,7 +154,8 @@ except:
     pass
 
 # --- MÓDULO INVERSIONES ---
-if "INVERSIONES" in menu:
+if menu == "INVERSIONES":
+    # Encabezado corregido para que el icono salga siempre
     col_icon, col_txt = st.columns([0.06, 0.94])
     with col_icon:
         try:
@@ -149,21 +167,20 @@ if "INVERSIONES" in menu:
 
     st.write("")
 
+    # Formulario Simétrico
     with st.container():
-        # Fila 1
         c1, c2, c3 = st.columns(3)
         with c1:
             fecha_in = st.date_input("🗓️ Fecha", datetime.now())
         with c2:
-            prenda = st.text_input("👗 Nombre prenda", placeholder="EJ: SHORT BLANCO").upper()
+            prenda = st.text_input("👗 Nombre prenda", placeholder="Ej: Short Negro Lazo").upper()
         with c3:
             cantidad = st.number_input("📦 Cantidad", min_value=1, step=1)
             
-        # Fila 2
         c4, c5, c6 = st.columns(3)
         with c4:
-            categoria = st.selectbox("🏷️ Categoría", ["SHORTS", "TOPS", "ENTERIZOS", "BODYS", "LEGGINS", "VESTIDOS", "BLUSAS"])
-        with c5: # AQUÍ ESTABA EL ERROR: Corregido
+            categoria = st.selectbox("🏷️ Categoría", ["SHORTS", "TOPS", "ENTERIZOS", "BODYS", "LEGGINS", "CHAQUETAS", "VESTIDOS", "BLUSAS"])
+        with c5:
             talla = st.selectbox("📏 Talla", ["XS", "S", "M", "L", "XL", "TALLA UNICA"])
         with c6:
             costo_u = st.number_input("💰 Costo unitario ($)", min_value=0.0)
@@ -202,7 +219,7 @@ if "INVERSIONES" in menu:
         )
 
         total_inv = df_full['COSTO TOTAL'].sum()
-        st.markdown(f'<div style="background-color: #FFF0F5; padding: 12px 25px; border-radius: 15px; text-align: center; color: #FF75A0; font-weight: 700; border: 1px solid #FFD1DC; display: inline-block; margin-top: 20px;">🛍️ Total invertido: ${total_inv:,.0f}</div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="total-card">🛍️ Total invertido: ${total_inv:,.0f}</div>', unsafe_allow_html=True)
 
         filas_selec = seleccion.selection.rows
         if filas_selec:
