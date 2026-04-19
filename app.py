@@ -16,10 +16,11 @@ MESES_ES = {
     "October": "Octubre", "November": "Noviembre", "December": "Diciembre"
 }
 
-# --- DISEÑO DE ALTA GAMA VK (CSS) ---
+# --- DISEÑO DE BOUTIQUE VK (CSS) ---
 st.markdown(f"""
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Poppins:wght@300;400;600&display=swap');
+    /* Importar Fuentes: Poppins para texto y Great Vibes para la marca */
+    @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;400;600&display=swap');
     
     .stApp {{
         background-color: #FDFDFD;
@@ -32,22 +33,26 @@ st.markdown(f"""
         color: white;
     }}
     
-    /* Contenedor del Logo en Sidebar */
-    .logo-container {{
-        text-align: center;
-        margin-top: -60px;
-        margin-bottom: -10px;
-    }}
-    
-    /* Nombre de la marca */
-    .sidebar-title {{
-        font-family: 'Playfair Display', serif;
-        font-size: 22px !important;
+    /* Nombre de la marca: Cursiva Moderna en el tope */
+    .sidebar-brand {{
+        font-family: 'Great Vibes', cursive;
+        font-size: 42px !important;
         text-align: center;
         color: white !important;
-        font-weight: 600;
-        letter-spacing: 1px;
-        margin-top: 0px;
+        margin-top: -40px !important;
+        margin-bottom: -10px !important;
+        font-weight: 400;
+    }}
+
+    /* Contenedor del Logo: Debajo del nombre */
+    .logo-container {{
+        text-align: center;
+        margin-top: 0px !important;
+        margin-bottom: 20px !important;
+    }}
+    
+    [data-testid="stSidebar"] img {{
+        width: 100px !important; /* Logo un poco más pequeño y delicado */
     }}
 
     /* Contenedores Blancos Redondeados */
@@ -59,7 +64,7 @@ st.markdown(f"""
         border: 1px solid #F0F0F0;
     }}
     
-    /* UNIFORMIDAD DE INPUTS */
+    /* Uniformidad de Inputs */
     .stInput input, .stSelectbox div[role="button"], .stDateInput div[data-baseweb="input"], .stNumberInput input {{
         border-radius: 12px !important;
         border: 1px solid #EEE !important;
@@ -83,7 +88,7 @@ st.markdown(f"""
         border-radius: 25px !important;
     }}
 
-    /* Título de sección */
+    /* Títulos de sección */
     .main-title {{
         font-size: 28px !important;
         font-weight: 600 !important;
@@ -108,14 +113,17 @@ st.markdown(f"""
 
 # --- SIDEBAR ---
 with st.sidebar:
+    # 1. Nombre de la marca en cursiva moderna (Al tope)
+    st.markdown('<p class="sidebar-brand">VK Brandwear</p>', unsafe_allow_html=True)
+    
+    # 2. Logo (Debajo del nombre)
     st.markdown('<div class="logo-container">', unsafe_allow_html=True)
     try:
-        st.image("Logo VK NEW blanco.PNG", width=110) 
+        st.image("Logo VK NEW blanco.PNG") 
     except:
         st.write("💎")
     st.markdown('</div>', unsafe_allow_html=True)
     
-    st.markdown('<p class="sidebar-title">VK BRANDWEAR</p>', unsafe_allow_html=True)
     st.write("---")
     menu = st.radio("MENÚ", ["INVERSIONES", "VENTAS", "GASTOS", "DASHBOARD"], label_visibility="collapsed")
 
@@ -144,9 +152,8 @@ if menu == "INVERSIONES":
     with col_txt:
         st.markdown('<p class="main-title">Registro de Inversiones</p>', unsafe_allow_html=True)
 
-    # Formulario Simétrico
+    # Formulario
     with st.container():
-        # Fila 1
         c1, c2, c3 = st.columns(3)
         with c1:
             fecha_in = st.date_input("📅 Fecha", datetime.now())
@@ -155,7 +162,6 @@ if menu == "INVERSIONES":
         with c3:
             cantidad = st.number_input("📦 Cantidad", min_value=1, step=1)
             
-        # Fila 2
         c4, c5, c6 = st.columns(3)
         with c4:
             categoria = st.selectbox("🏷️ Categoría", ["SHORTS", "TOPS", "ENTERIZOS", "BODYS", "LEGGINS", "CHAQUETAS", "VESTIDOS", "BLUSAS"])
@@ -177,7 +183,7 @@ if menu == "INVERSIONES":
                     time.sleep(1)
                     st.rerun()
 
-    # Tabla de Inventario
+    # Tabla
     st.write("---")
     st.markdown("### 📋 Inventario Registrado")
     
