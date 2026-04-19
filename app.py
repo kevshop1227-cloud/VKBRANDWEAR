@@ -16,10 +16,10 @@ MESES_ES = {
     "October": "Octubre", "November": "Noviembre", "December": "Diciembre"
 }
 
-# --- DISEÑO DE LUJO VK (CSS) ---
+# --- DISEÑO DE ALTA GAMA VK (CSS) ---
 st.markdown(f"""
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Poppins:wght@300;400;600&display=swap');
     
     .stApp {{
         background-color: #FDFDFD;
@@ -32,21 +32,22 @@ st.markdown(f"""
         color: white;
     }}
     
-    /* Logo de la Sidebar más pequeño */
-    [data-testid="stSidebar"] img {{
-        width: 120px !important;
-        margin-bottom: 0px !important;
+    /* Contenedor del Logo en Sidebar: Más arriba y centrado */
+    .logo-container {{
+        text-align: center;
+        margin-top: -60px; /* Sube el logo */
+        margin-bottom: -10px;
     }}
     
-    /* Nombre de la marca más grande y elegante */
+    /* Nombre de la marca: Más pequeño y elegante */
     .sidebar-title {{
         font-family: 'Playfair Display', serif;
-        font-size: 28px !important;
+        font-size: 22px !important; /* Letra un poco más pequeña */
         text-align: center;
         color: white !important;
-        margin-top: 10px;
-        margin-bottom: 20px;
+        font-weight: 600;
         letter-spacing: 1px;
+        margin-top: 0px;
     }}
 
     /* Contenedores Blancos Redondeados */
@@ -58,21 +59,15 @@ st.markdown(f"""
         border: 1px solid #F0F0F0;
     }}
     
-    /* UNIFORMIDAD TOTAL: Fecha, Texto, Números y Selectores */
+    /* UNIFORMIDAD DE INPUTS: Fecha, Texto y Números iguales */
     .stInput input, .stSelectbox div[role="button"], .stDateInput div[data-baseweb="input"], .stNumberInput input {{
         border-radius: 12px !important;
         border: 1px solid #EEE !important;
         height: 42px !important;
         background-color: #F9F9F9 !important;
-        font-size: 14px !important;
-    }}
-    
-    /* Corregir el ancho de la fecha para que no sobresalga */
-    .stDateInput {{
-        width: 100% !important;
     }}
 
-    /* Botón AGREGAR (Rosa) */
+    /* Botones Estilizados */
     div.stButton > button:first-child {{
         background-color: #FF75A0 !important;
         color: white !important;
@@ -80,53 +75,47 @@ st.markdown(f"""
         padding: 10px 40px !important;
         font-weight: 600 !important;
         border: none !important;
-        box-shadow: 0 4px 10px rgba(255,117,160,0.3);
     }}
 
-    /* Botón ELIMINAR */
     .stButton>button[kind="secondary"] {{
         background-color: #FF1493 !important;
         color: white !important;
         border-radius: 25px !important;
-        padding: 10px 40px !important;
-        font-weight: 600 !important;
-        border: none !important;
     }}
 
-    /* Estilo de la tabla */
-    [data-testid="stDataFrame"] {{
-        border-radius: 15px !important;
-        border: 1px solid #F0F0F0;
-    }}
-    
-    /* Título de sección más compacto */
-    .main-header {{
-        display: flex;
-        align-items: center;
-        gap: 15px;
-        margin-bottom: 20px;
-    }}
-    
-    .main-header img {{
-        width: 45px !important;
-    }}
-    
-    .main-header h1 {{
+    /* Título de sección alineado con el icono */
+    .main-title {{
         font-size: 28px !important;
-        margin: 0 !important;
-        padding: 0 !important;
+        font-weight: 600 !important;
         color: #333;
+        margin-left: -15px; /* Acerca el texto al icono */
+    }}
+    
+    /* Tarjeta de Total Invertido */
+    .total-card {{
+        background-color: #FFF0F5;
+        padding: 12px 25px;
+        border-radius: 15px;
+        text-align: center;
+        color: #FF75A0;
+        font-weight: 600;
+        border: 1px solid #FFD1DC;
+        display: inline-block;
+        margin-top: 20px;
     }}
     </style>
     """, unsafe_allow_html=True)
 
 # --- SIDEBAR ---
 with st.sidebar:
+    st.markdown('<div class="logo-container">', unsafe_allow_html=True)
     try:
-        # Usamos el nombre exacto de tu GitHub
-        st.image("Logo VK NEW blanco.PNG")
+        # Asegúrate de que el archivo se llame exactamente así en GitHub
+        st.image("Logo VK NEW blanco.PNG", width=110) 
     except:
         st.write("💎")
+    st.markdown('</div>', unsafe_allow_html=True)
+    
     st.markdown('<p class="sidebar-title">VK BRANDWEAR</p>', unsafe_allow_html=True)
     st.write("---")
     menu = st.radio("MENÚ", ["INVERSIONES", "VENTAS", "GASTOS", "DASHBOARD"], label_visibility="collapsed")
@@ -146,38 +135,41 @@ except:
 
 # --- MÓDULO INVERSIONES ---
 if menu == "INVERSIONES":
-    # Encabezado Compacto
-    st.markdown(f"""
-        <div class="main-header">
-            <img src="https://raw.githubusercontent.com/{st.secrets.get('github_user', 'TU_USUARIO')}/{st.secrets.get('github_repo', 'TU_REPO')}/main/INVERSIONES.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3502/3502688.png'" style="width:45px;">
-            <h1>Registro de Inversiones</h1>
-        </div>
-        """, unsafe_allow_html=True)
+    # Encabezado con Icono y Título juntos
+    col_icon, col_txt = st.columns([0.07, 0.93])
+    with col_icon:
+        try:
+            st.image("INVERSIONES.png", width=45)
+        except:
+            st.write("📁")
+    with col_txt:
+        st.markdown('<p class="main-title">Registro de Inversiones</p>', unsafe_allow_html=True)
 
     # Formulario Simétrico
     with st.container():
         # Fila 1
-        col1, col2, col3 = st.columns(3)
-        with col1:
+        c1, c2, c3 = st.columns(3)
+        with c1:
             fecha_in = st.date_input("📅 Fecha", datetime.now())
-        with col2:
+        with c2:
             prenda = st.text_input("👗 Nombre prenda", placeholder="Ej: Short Negro Lazo").upper()
-        with col3:
+        with c3:
             cantidad = st.number_input("📦 Cantidad", min_value=1, step=1)
             
         # Fila 2
-        col4, col5, col6 = st.columns(3)
-        with col4:
+        c4, c5, c6 = st.columns(3)
+        with c4:
             categoria = st.selectbox("🏷️ Categoría", ["SHORTS", "TOPS", "ENTERIZOS", "BODYS", "LEGGINS", "CHAQUETAS", "VESTIDOS", "BLUSAS"])
-        with col5:
+        with c5:
             talla = st.selectbox("📏 Talla", ["XS", "S", "M", "L", "XL", "TALLA UNICA"])
-        with col6:
+        with col6 = c6 # Solo para consistencia
+        with c6:
             costo_u = st.number_input("💰 Costo unitario ($)", min_value=0.0)
         
         st.write("")
-        c_btn1, c_btn2, _ = st.columns([1, 1, 1])
+        btn_col1, btn_col2, _ = st.columns([1, 1, 1])
         
-        with c_btn1:
+        with btn_col1:
             if st.button("➕ AGREGAR INVENTARIO"):
                 if prenda:
                     mes = MESES_ES.get(fecha_in.strftime("%B"), fecha_in.strftime("%B"))
@@ -193,7 +185,6 @@ if menu == "INVERSIONES":
     
     if not df_full.empty:
         cols_mostrar = ['FECHA', 'CATEGORIA', 'NOMBRE PRENDA', 'TALLA', 'STOCK ACTUAL', 'COSTO UNITARIO', 'COSTO TOTAL']
-        
         seleccion = st.dataframe(
             df_full,
             use_container_width=True,
@@ -209,11 +200,11 @@ if menu == "INVERSIONES":
         )
 
         total_inv = df_full['COSTO TOTAL'].sum()
-        st.markdown(f'<div style="background-color: #FFF0F5; padding: 15px; border-radius: 15px; text-align: center; color: #FF75A0; font-weight: 600; border: 1px solid #FFD1DC; display: inline-block; margin-top: 20px;">🛍️ Total invertido: ${total_inv:,.0f}</div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="total-card">🛍️ Total invertido: ${total_inv:,.0f}</div>', unsafe_allow_html=True)
 
         filas_selec = seleccion.selection.rows
         if filas_selec:
-            with c_btn2:
+            with btn_col2:
                 if st.button(f"🗑️ ELIMINAR ({len(filas_selec)})", type="secondary"):
                     for i in filas_selec:
                         fila = df_full.iloc[i]
