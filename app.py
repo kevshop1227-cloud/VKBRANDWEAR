@@ -32,17 +32,17 @@ st.markdown(f"""
         color: white;
     }}
     
-    /* Contenedor del Logo en Sidebar: Más arriba y centrado */
+    /* Contenedor del Logo en Sidebar */
     .logo-container {{
         text-align: center;
-        margin-top: -60px; /* Sube el logo */
+        margin-top: -60px;
         margin-bottom: -10px;
     }}
     
-    /* Nombre de la marca: Más pequeño y elegante */
+    /* Nombre de la marca */
     .sidebar-title {{
         font-family: 'Playfair Display', serif;
-        font-size: 22px !important; /* Letra un poco más pequeña */
+        font-size: 22px !important;
         text-align: center;
         color: white !important;
         font-weight: 600;
@@ -59,7 +59,7 @@ st.markdown(f"""
         border: 1px solid #F0F0F0;
     }}
     
-    /* UNIFORMIDAD DE INPUTS: Fecha, Texto y Números iguales */
+    /* UNIFORMIDAD DE INPUTS */
     .stInput input, .stSelectbox div[role="button"], .stDateInput div[data-baseweb="input"], .stNumberInput input {{
         border-radius: 12px !important;
         border: 1px solid #EEE !important;
@@ -83,12 +83,12 @@ st.markdown(f"""
         border-radius: 25px !important;
     }}
 
-    /* Título de sección alineado con el icono */
+    /* Título de sección */
     .main-title {{
         font-size: 28px !important;
         font-weight: 600 !important;
         color: #333;
-        margin-left: -15px; /* Acerca el texto al icono */
+        margin-left: -15px;
     }}
     
     /* Tarjeta de Total Invertido */
@@ -110,7 +110,6 @@ st.markdown(f"""
 with st.sidebar:
     st.markdown('<div class="logo-container">', unsafe_allow_html=True)
     try:
-        # Asegúrate de que el archivo se llame exactamente así en GitHub
         st.image("Logo VK NEW blanco.PNG", width=110) 
     except:
         st.write("💎")
@@ -135,7 +134,7 @@ except:
 
 # --- MÓDULO INVERSIONES ---
 if menu == "INVERSIONES":
-    # Encabezado con Icono y Título juntos
+    # Encabezado con Icono y Título
     col_icon, col_txt = st.columns([0.07, 0.93])
     with col_icon:
         try:
@@ -162,7 +161,6 @@ if menu == "INVERSIONES":
             categoria = st.selectbox("🏷️ Categoría", ["SHORTS", "TOPS", "ENTERIZOS", "BODYS", "LEGGINS", "CHAQUETAS", "VESTIDOS", "BLUSAS"])
         with c5:
             talla = st.selectbox("📏 Talla", ["XS", "S", "M", "L", "XL", "TALLA UNICA"])
-        with col6 = c6 # Solo para consistencia
         with c6:
             costo_u = st.number_input("💰 Costo unitario ($)", min_value=0.0)
         
