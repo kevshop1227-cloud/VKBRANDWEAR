@@ -16,10 +16,10 @@ MESES_ES = {
     "October": "Octubre", "November": "Noviembre", "December": "Diciembre"
 }
 
-# --- DISEÑO LIMPIO VK (CSS) ---
+# --- DISEÑO DE LUJO VK (CSS) ---
 st.markdown(f"""
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&display=swap');
     
     .stApp {{
         background-color: #FDFDFD;
@@ -31,30 +31,45 @@ st.markdown(f"""
         background-color: #FF75A0; 
         color: white;
     }}
-    [data-testid="stSidebar"] * {{ color: white !important; font-weight: 600; }}
     
+    /* Logo de la Sidebar más pequeño */
+    [data-testid="stSidebar"] img {{
+        width: 120px !important;
+        margin-bottom: 0px !important;
+    }}
+    
+    /* Nombre de la marca más grande y elegante */
     .sidebar-title {{
-        font-size: 24px;
+        font-family: 'Playfair Display', serif;
+        font-size: 28px !important;
         text-align: center;
-        font-weight: 600;
-        margin-top: -10px;
+        color: white !important;
+        margin-top: 10px;
+        margin-bottom: 20px;
+        letter-spacing: 1px;
     }}
 
     /* Contenedores Blancos Redondeados */
     .stContainer {{
         background-color: #FFFFFF;
-        padding: 30px;
+        padding: 25px;
         border-radius: 20px;
         box-shadow: 0 4px 12px rgba(0,0,0,0.04);
         border: 1px solid #F0F0F0;
     }}
     
-    /* Inputs uniformes y del mismo tamaño */
-    .stInput input, .stSelectbox div[role="button"], .stDateInput div, .stNumberInput input {{
+    /* UNIFORMIDAD TOTAL: Fecha, Texto, Números y Selectores */
+    .stInput input, .stSelectbox div[role="button"], .stDateInput div[data-baseweb="input"], .stNumberInput input {{
         border-radius: 12px !important;
         border: 1px solid #EEE !important;
-        padding: 10px !important;
-        height: 45px !important;
+        height: 42px !important;
+        background-color: #F9F9F9 !important;
+        font-size: 14px !important;
+    }}
+    
+    /* Corregir el ancho de la fecha para que no sobresalga */
+    .stDateInput {{
+        width: 100% !important;
     }}
 
     /* Botón AGREGAR (Rosa) */
@@ -62,38 +77,45 @@ st.markdown(f"""
         background-color: #FF75A0 !important;
         color: white !important;
         border-radius: 25px !important;
-        padding: 12px 40px !important;
+        padding: 10px 40px !important;
         font-weight: 600 !important;
         border: none !important;
         box-shadow: 0 4px 10px rgba(255,117,160,0.3);
     }}
 
-    /* Botón ELIMINAR (Rosa fuerte) */
+    /* Botón ELIMINAR */
     .stButton>button[kind="secondary"] {{
         background-color: #FF1493 !important;
         color: white !important;
         border-radius: 25px !important;
-        padding: 12px 40px !important;
+        padding: 10px 40px !important;
         font-weight: 600 !important;
         border: none !important;
     }}
 
-    /* Tabla Estilizada */
+    /* Estilo de la tabla */
     [data-testid="stDataFrame"] {{
         border-radius: 15px !important;
-        overflow: hidden !important;
+        border: 1px solid #F0F0F0;
     }}
     
-    .total-card {{
-        background-color: #FFF0F5;
-        padding: 15px 30px;
-        border-radius: 15px;
-        text-align: center;
-        color: #FF75A0;
-        font-weight: 600;
-        margin-top: 20px;
-        border: 1px solid #FFD1DC;
-        display: inline-block;
+    /* Título de sección más compacto */
+    .main-header {{
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 20px;
+    }}
+    
+    .main-header img {{
+        width: 45px !important;
+    }}
+    
+    .main-header h1 {{
+        font-size: 28px !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        color: #333;
     }}
     </style>
     """, unsafe_allow_html=True)
@@ -101,8 +123,8 @@ st.markdown(f"""
 # --- SIDEBAR ---
 with st.sidebar:
     try:
-        # Corregido a .PNG como en tu imagen
-        st.image("Logo VK NEW blanco.PNG", use_container_width=True)
+        # Usamos el nombre exacto de tu GitHub
+        st.image("Logo VK NEW blanco.PNG")
     except:
         st.write("💎")
     st.markdown('<p class="sidebar-title">VK BRANDWEAR</p>', unsafe_allow_html=True)
@@ -124,36 +146,32 @@ except:
 
 # --- MÓDULO INVERSIONES ---
 if menu == "INVERSIONES":
-    # Encabezado con imagen corregida a .png minúscula
-    col_h1, col_h2 = st.columns([0.15, 0.85])
-    with col_h1:
-        try:
-            st.image("INVERSIONES.png", width=80)
-        except:
-            st.write("📁")
-    with col_h2:
-        st.markdown("<h1 style='margin-bottom:0; font-size: 38px;'>Registro de Inversiones</h1>", unsafe_allow_html=True)
+    # Encabezado Compacto
+    st.markdown(f"""
+        <div class="main-header">
+            <img src="https://raw.githubusercontent.com/{st.secrets.get('github_user', 'TU_USUARIO')}/{st.secrets.get('github_repo', 'TU_REPO')}/main/INVERSIONES.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3502/3502688.png'" style="width:45px;">
+            <h1>Registro de Inversiones</h1>
+        </div>
+        """, unsafe_allow_html=True)
 
-    st.write("") 
-
-    # Formulario con columnas uniformes
+    # Formulario Simétrico
     with st.container():
-        # Fila 1: Fecha, Nombre y Cantidad (Mismo tamaño)
-        f1_c1, f1_c2, f1_c3 = st.columns(3)
-        with f1_c1:
-            fecha_in = st.date_input("🗓️ Fecha", datetime.now())
-        with f1_c2:
+        # Fila 1
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            fecha_in = st.date_input("📅 Fecha", datetime.now())
+        with col2:
             prenda = st.text_input("👗 Nombre prenda", placeholder="Ej: Short Negro Lazo").upper()
-        with f1_c3:
+        with col3:
             cantidad = st.number_input("📦 Cantidad", min_value=1, step=1)
             
-        # Fila 2: Categoría, Talla y Costo
-        f2_c1, f2_c2, f2_c3 = st.columns(3)
-        with f2_c1:
+        # Fila 2
+        col4, col5, col6 = st.columns(3)
+        with col4:
             categoria = st.selectbox("🏷️ Categoría", ["SHORTS", "TOPS", "ENTERIZOS", "BODYS", "LEGGINS", "CHAQUETAS", "VESTIDOS", "BLUSAS"])
-        with f2_c2:
+        with col5:
             talla = st.selectbox("📏 Talla", ["XS", "S", "M", "L", "XL", "TALLA UNICA"])
-        with f2_c3:
+        with col6:
             costo_u = st.number_input("💰 Costo unitario ($)", min_value=0.0)
         
         st.write("")
@@ -165,7 +183,7 @@ if menu == "INVERSIONES":
                     mes = MESES_ES.get(fecha_in.strftime("%B"), fecha_in.strftime("%B"))
                     datos = {"action": "registrar_inversion", "fecha": str(fecha_in), "año": fecha_in.year, "mes": mes, "categoria": categoria, "prenda": prenda, "talla": talla, "cantidad": cantidad, "costo": costo_u}
                     requests.post(URL_API, json=datos)
-                    st.success("¡Agregado!")
+                    st.success("¡Registrado!")
                     time.sleep(1)
                     st.rerun()
 
@@ -191,7 +209,7 @@ if menu == "INVERSIONES":
         )
 
         total_inv = df_full['COSTO TOTAL'].sum()
-        st.markdown(f'<div class="total-card">🛍️ Total invertido: ${total_inv:,.0f}</div>', unsafe_allow_html=True)
+        st.markdown(f'<div style="background-color: #FFF0F5; padding: 15px; border-radius: 15px; text-align: center; color: #FF75A0; font-weight: 600; border: 1px solid #FFD1DC; display: inline-block; margin-top: 20px;">🛍️ Total invertido: ${total_inv:,.0f}</div>', unsafe_allow_html=True)
 
         filas_selec = seleccion.selection.rows
         if filas_selec:
@@ -202,4 +220,4 @@ if menu == "INVERSIONES":
                         requests.post(URL_API, json={"action": "eliminar_inversion", "prenda": fila["NOMBRE PRENDA"], "talla": fila["TALLA"], "fecha": fila["FECHA_RAW"]})
                     st.rerun()
     else:
-        st.info("No hay registros en el inventario.")
+        st.info("No hay registros aún.")
