@@ -5,6 +5,7 @@ from datetime import datetime
 import time
 
 # --- CONFIGURACIÓN ---
+# Reemplaza con tu URL de Google Apps Script
 URL_API = "https://script.google.com/macros/s/AKfycbzVJV038RRhcx66xnFSCgVSLSa_-mXgu9yxT5tk_il6ehYBdhc9clRgXewcks4U_6Nf/exec"
 
 st.set_page_config(page_title="VK BRANDWEAR", page_icon="💖", layout="wide")
@@ -16,10 +17,11 @@ MESES_ES = {
     "October": "Octubre", "November": "Noviembre", "December": "Diciembre"
 }
 
-# --- DISEÑO DE ALTA GAMA VK (CSS CORREGIDO) ---
+# --- DISEÑO DE ALTA GAMA VK (CSS DEFINITIVO) ---
 st.markdown(f"""
     <style>
-    /* Fuente Segoe UI General */
+    @import url('https://fonts.googleapis.com/css2?family=Alex+Brush&family=Poppins:wght@300;400;600&display=swap');
+    
     .stApp {{
         background-color: #FDFDFD;
         font-family: 'Segoe UI', sans-serif;
@@ -30,62 +32,67 @@ st.markdown(f"""
         background-color: #FF75A0; 
     }}
 
-    /* LOGO Y NOMBRE JUNTOS AL TOPE */
+    /* Cabecera Sidebar: Logo y Nombre centrados y muy arriba */
     .header-sidebar {{
         text-align: center;
-        margin-top: -90px !important;
-        margin-bottom: 20px !important;
+        margin-top: -100px !important;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }}
     
-    .header-sidebar img {{
-        width: 100px !important;
-        margin-bottom: 5px;
+    .logo-img {{
+        width: 100px !important; /* Tamaño pequeño y delicado */
+        margin-bottom: 0px !important;
     }}
     
     .sidebar-brand {{
-        font-family: 'Segoe UI', sans-serif;
-        font-size: 20px !important;
+        font-family: 'Alex Brush', cursive;
+        font-size: 55px !important; /* Nombre bien grande */
         color: white !important;
-        font-weight: 800;
-        letter-spacing: 1.5px;
-        text-transform: uppercase;
-        margin: 0;
+        margin-top: -15px !important;
+        margin-bottom: 30px !important;
+        text-align: center;
     }}
 
-    /* --- ESTILO DE BOTONES BLANCOS REDONDEADOS (SIDEBAR) --- */
+    /* --- MENÚ DE BOTONES BLANCOS LARGOS Y REDONDEADOS --- */
     [data-testid="stSidebar"] .stRadio div[role="radiogroup"] {{
-        gap: 10px;
-        padding-top: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        width: 100%;
     }}
 
     [data-testid="stSidebar"] .stRadio div[role="radiogroup"] label {{
         background-color: white !important;
         color: #FF75A0 !important;
-        border-radius: 50px !important; /* Bordes muy redondos */
-        padding: 6px 15px !important;
+        border-radius: 50px !important; /* Muy redondeados */
+        padding: 10px 20px !important;
+        width: 95% !important; /* Botones más largos */
         font-weight: 700 !important;
-        font-size: 13px !important; /* Letra más pequeña */
-        width: 100% !important;
+        font-size: 15px !important;
         border: none !important;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        display: flex;
-        justify-content: center; /* Texto centrado */
-        text-align: center;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        display: flex !important;
+        align-items: center !important;
+        justify-content: flex-start !important; /* Icono a la izquierda */
+        cursor: pointer;
+        transition: 0.3s;
     }}
 
-    /* Quitar el punto de selección */
+    /* Ocultar el círculo del radio button original */
     [data-testid="stSidebar"] .stRadio div[role="radiogroup"] label div:first-child {{
         display: none !important;
     }}
 
-    /* Hover de los botones */
     [data-testid="stSidebar"] .stRadio div[role="radiogroup"] label:hover {{
-        background-color: #FFF5F7 !important;
-        transform: scale(1.03);
-        transition: 0.2s;
+        transform: scale(1.05);
+        background-color: #FFF0F5 !important;
     }}
 
-    /* --- FORMULARIO Y TABLA --- */
+    /* --- ESTILO FORMULARIO --- */
     .stContainer {{
         background-color: #FFFFFF !important;
         padding: 30px;
@@ -97,8 +104,7 @@ st.markdown(f"""
     label[data-testid="stWidgetLabel"] p {{
         color: #FF75A0 !important;
         font-weight: 700 !important;
-        font-size: 14px !important;
-        text-transform: uppercase;
+        font-size: 15px !important;
     }}
     
     div.stButton > button:first-child {{
@@ -108,31 +114,34 @@ st.markdown(f"""
         font-weight: 700 !important;
     }}
 
-    .main-title {{ font-size: 28px !important; font-weight: 800; color: #333; }}
+    .main-title {{ font-size: 32px !important; font-weight: 800; color: #333; }}
     </style>
     """, unsafe_allow_html=True)
 
 # --- SIDEBAR ---
 with st.sidebar:
-    # Logo y Marca juntos al tope
-    st.markdown('<div class="header-sidebar">', unsafe_allow_html=True)
-    try:
-        st.image("Logo VK NEW blanco.PNG") 
-    except:
-        st.write("💎")
+    # 1. Logo y Nombre juntos, centrados y arriba
+    # Se usa st.columns para ayudar con el centrado del logo pequeño
+    col_l1, col_l2, col_l3 = st.columns([1, 2, 1])
+    with col_l2:
+        try:
+            st.image("Logo VK NEW blanco.PNG", use_container_width=True)
+        except:
+            st.write("💎")
+    
+    # Nombre en grande justo debajo
     st.markdown('<p class="sidebar-brand">VK Brandwear</p>', unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
     
     st.write("---")
     
-    # Menú con iconos y nombres corregidos (CENTRADOS)
+    # 2. Menú de píldoras largas con iconos a la izquierda
     menu = st.radio(
         "Navegación", 
         ["📈 Inversiones", "🛍️ Ventas", "💰 Gastos", "🔄 Reinversiones", "📊 Dashboard"], 
         label_visibility="collapsed"
     )
 
-# --- CARGA DE DATOS ---
+# --- LÓGICA DE CARGA DE DATOS ---
 df_full = pd.DataFrame()
 try:
     response = requests.post(URL_API, json={"action": "leer_inventario"}, timeout=15)
@@ -163,13 +172,13 @@ if "Inversiones" in menu:
         with c1:
             fecha_in = st.date_input("🗓️ Fecha", datetime.now())
         with c2:
-            prenda = st.text_input("👗 Nombre prenda", placeholder="EJ: SHORT NEGRO").upper()
+            prenda = st.text_input("👗 Nombre prenda", placeholder="EJ: SHORT BLANCO").upper()
         with c3:
             cantidad = st.number_input("📦 Cantidad", min_value=1, step=1)
             
         c4, c5, c6 = st.columns(3)
         with c4:
-            categoria = st.selectbox("🏷️ Categoría", ["SHORTS", "TOPS", "ENTERIZOS", "BODYS", "LEGGINS", "VESTIDOS"])
+            categoria = st.selectbox("🏷️ Categoría", ["SHORTS", "TOPS", "ENTERIZOS", "BODYS", "LEGGINS", "VESTIDOS", "BLUSAS"])
         with c5:
             talla = st.selectbox("📏 Talla", ["XS", "S", "M", "L", "XL", "TALLA UNICA"])
         with c6:
