@@ -5,7 +5,6 @@ from datetime import datetime
 import time
 
 # --- CONFIGURACIÓN ---
-# Reemplaza con tu URL de Google Apps Script
 URL_API = "https://script.google.com/macros/s/AKfycbzVJV038RRhcx66xnFSCgVSLSa_-mXgu9yxT5tk_il6ehYBdhc9clRgXewcks4U_6Nf/exec"
 
 st.set_page_config(page_title="VK BRANDWEAR", page_icon="💖", layout="wide")
@@ -17,10 +16,10 @@ MESES_ES = {
     "October": "Octubre", "November": "Noviembre", "December": "Diciembre"
 }
 
-# --- DISEÑO DE ALTA GAMA VK (CSS DEFINITIVO) ---
+# --- DISEÑO DE ALTA GAMA VK (CSS) ---
 st.markdown(f"""
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Alex+Brush&family=Poppins:wght@300;400;600&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Alex+Brush&family=Poppins:wght@400;700&display=swap');
     
     .stApp {{
         background-color: #FDFDFD;
@@ -32,70 +31,72 @@ st.markdown(f"""
         background-color: #FF75A0; 
     }}
 
-    /* Cabecera Sidebar: Logo y Nombre centrados y muy arriba */
+    /* Cabecera Sidebar: Logo y Nombre */
     .header-sidebar {{
         text-align: center;
-        margin-top: -100px !important;
+        margin-top: -80px !important;
         width: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }}
-    
-    .logo-img {{
-        width: 100px !important; /* Tamaño pequeño y delicado */
-        margin-bottom: 0px !important;
     }}
     
     .sidebar-brand {{
         font-family: 'Alex Brush', cursive;
-        font-size: 55px !important; /* Nombre bien grande */
+        font-size: 50px !important;
         color: white !important;
-        margin-top: -15px !important;
-        margin-bottom: 30px !important;
+        margin-top: -10px !important;
+        margin-bottom: 20px !important;
         text-align: center;
+        display: block;
     }}
 
-    /* --- MENÚ DE BOTONES BLANCOS LARGOS Y REDONDEADOS --- */
+    /* --- MENÚ DE BOTONES LARGOS (PÍLDORAS BLANCAS) --- */
+    /* Contenedor del radio */
     [data-testid="stSidebar"] .stRadio div[role="radiogroup"] {{
-        display: flex;
-        flex-direction: column;
-        align-items: center;
         gap: 12px;
         width: 100%;
     }}
 
+    /* Estilo del botón (Label) */
     [data-testid="stSidebar"] .stRadio div[role="radiogroup"] label {{
         background-color: white !important;
         color: #FF75A0 !important;
-        border-radius: 50px !important; /* Muy redondeados */
-        padding: 10px 20px !important;
-        width: 95% !important; /* Botones más largos */
-        font-weight: 700 !important;
-        font-size: 15px !important;
+        border-radius: 50px !important;
+        padding: 12px 20px !important;
+        width: 100% !important; /* Largo de la columna */
+        font-weight: 700 !important; /* Negrita */
+        font-size: 16px !important;
         border: none !important;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         display: flex !important;
         align-items: center !important;
-        justify-content: flex-start !important; /* Icono a la izquierda */
         cursor: pointer;
-        transition: 0.3s;
+        margin-bottom: 5px;
     }}
 
-    /* Ocultar el círculo del radio button original */
+    /* Ocultar el círculo del radio button */
     [data-testid="stSidebar"] .stRadio div[role="radiogroup"] label div:first-child {{
         display: none !important;
     }}
 
-    [data-testid="stSidebar"] .stRadio div[role="radiogroup"] label:hover {{
-        transform: scale(1.05);
-        background-color: #FFF0F5 !important;
+    /* Ajuste del texto para que no se mueva */
+    [data-testid="stSidebar"] .stRadio div[role="radiogroup"] label p {{
+        margin: 0 !important;
+        padding: 0 !important;
+        display: flex;
+        align-items: center;
+        gap: 10px; /* Espacio entre icono y texto */
     }}
 
-    /* --- ESTILO FORMULARIO --- */
+    /* Hover */
+    [data-testid="stSidebar"] .stRadio div[role="radiogroup"] label:hover {{
+        background-color: #FFF5F7 !important;
+        transform: scale(1.02);
+        transition: 0.2s;
+    }}
+
+    /* --- FORMULARIO --- */
     .stContainer {{
         background-color: #FFFFFF !important;
-        padding: 30px;
+        padding: 25px;
         border-radius: 20px;
         box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         border: 1px solid #F0F0F0;
@@ -104,44 +105,43 @@ st.markdown(f"""
     label[data-testid="stWidgetLabel"] p {{
         color: #FF75A0 !important;
         font-weight: 700 !important;
-        font-size: 15px !important;
-    }}
-    
-    div.stButton > button:first-child {{
-        background-color: #FF75A0 !important;
-        color: white !important;
-        border-radius: 25px !important;
-        font-weight: 700 !important;
+        text-transform: uppercase;
+        font-size: 14px !important;
     }}
 
-    .main-title {{ font-size: 32px !important; font-weight: 800; color: #333; }}
+    /* Inputs uniformes */
+    .stInput input, .stSelectbox div[role="button"], .stDateInput div[data-baseweb="input"], .stNumberInput input {{
+        height: 42px !important;
+        border-radius: 12px !important;
+    }}
+
+    .main-title {{ font-size: 28px !important; font-weight: 800; color: #333; }}
     </style>
     """, unsafe_allow_html=True)
 
 # --- SIDEBAR ---
 with st.sidebar:
-    # 1. Logo y Nombre juntos, centrados y arriba
-    # Se usa st.columns para ayudar con el centrado del logo pequeño
-    col_l1, col_l2, col_l3 = st.columns([1, 2, 1])
-    with col_l2:
-        try:
-            st.image("Logo VK NEW blanco.PNG", use_container_width=True)
-        except:
-            st.write("💎")
-    
-    # Nombre en grande justo debajo
-    st.markdown('<p class="sidebar-brand">VK Brandwear</p>', unsafe_allow_html=True)
+    # 1. Logo y Nombre
+    st.markdown('<div class="header-sidebar">', unsafe_allow_html=True)
+    try:
+        # Asegúrate de que el nombre sea exacto en GitHub
+        st.image("Logo VK NEW blanco.PNG", width=110) 
+    except:
+        st.write("💎")
+    st.markdown(f'<p class="sidebar-brand">VK Brandwear</p>', unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
     
     st.write("---")
     
-    # 2. Menú de píldoras largas con iconos a la izquierda
+    # 2. Menú de píldoras blancas (Iconos a la izquierda)
+    # Importante: El texto aquí es el que sale dentro del botón
     menu = st.radio(
         "Navegación", 
-        ["📈 Inversiones", "🛍️ Ventas", "💰 Gastos", "🔄 Reinversiones", "📊 Dashboard"], 
+        ["📈 INVERSIONES", "🛍️ VENTAS", "💰 GASTOS", "🔄 REINVERSIONES", "📊 DASHBOARD"], 
         label_visibility="collapsed"
     )
 
-# --- LÓGICA DE CARGA DE DATOS ---
+# --- CARGA DE DATOS ---
 df_full = pd.DataFrame()
 try:
     response = requests.post(URL_API, json={"action": "leer_inventario"}, timeout=15)
@@ -155,7 +155,7 @@ except:
     pass
 
 # --- MÓDULO INVERSIONES ---
-if "Inversiones" in menu:
+if "INVERSIONES" in menu:
     col_icon, col_txt = st.columns([0.06, 0.94])
     with col_icon:
         try:
@@ -179,7 +179,7 @@ if "Inversiones" in menu:
         c4, c5, c6 = st.columns(3)
         with c4:
             categoria = st.selectbox("🏷️ Categoría", ["SHORTS", "TOPS", "ENTERIZOS", "BODYS", "LEGGINS", "VESTIDOS", "BLUSAS"])
-        with c5:
+        with talla_col = c5: # Mantenemos estructura
             talla = st.selectbox("📏 Talla", ["XS", "S", "M", "L", "XL", "TALLA UNICA"])
         with c6:
             costo_u = st.number_input("💰 Costo unitario ($)", min_value=0.0)
@@ -228,3 +228,5 @@ if "Inversiones" in menu:
                         fila = df_full.iloc[i]
                         requests.post(URL_API, json={"action": "eliminar_inversion", "prenda": fila["NOMBRE PRENDA"], "talla": fila["TALLA"], "fecha": fila["FECHA_RAW"]})
                     st.rerun()
+    else:
+        st.info("No hay registros aún.")
