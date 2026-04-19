@@ -16,7 +16,7 @@ MESES_ES = {
     "October": "Octubre", "November": "Noviembre", "December": "Diciembre"
 }
 
-# --- DISEÑO DE ALTA GAMA VK (CSS) ---
+# --- DISEÑO DE ALTA GAMA VK (CSS DEFINITIVO) ---
 st.markdown(f"""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Alex+Brush&family=Poppins:wght@400;700&display=swap');
@@ -49,51 +49,38 @@ st.markdown(f"""
     }}
 
     /* --- MENÚ DE BOTONES LARGOS (PÍLDORAS BLANCAS) --- */
-    /* Contenedor del radio */
     [data-testid="stSidebar"] .stRadio div[role="radiogroup"] {{
         gap: 12px;
         width: 100%;
     }}
 
-    /* Estilo del botón (Label) */
     [data-testid="stSidebar"] .stRadio div[role="radiogroup"] label {{
         background-color: white !important;
         color: #FF75A0 !important;
         border-radius: 50px !important;
         padding: 12px 20px !important;
-        width: 100% !important; /* Largo de la columna */
-        font-weight: 700 !important; /* Negrita */
+        width: 100% !important;
+        font-weight: 700 !important;
         font-size: 16px !important;
         border: none !important;
         box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         display: flex !important;
         align-items: center !important;
         cursor: pointer;
-        margin-bottom: 5px;
     }}
 
-    /* Ocultar el círculo del radio button */
     [data-testid="stSidebar"] .stRadio div[role="radiogroup"] label div:first-child {{
         display: none !important;
     }}
 
-    /* Ajuste del texto para que no se mueva */
     [data-testid="stSidebar"] .stRadio div[role="radiogroup"] label p {{
         margin: 0 !important;
-        padding: 0 !important;
         display: flex;
         align-items: center;
-        gap: 10px; /* Espacio entre icono y texto */
+        gap: 10px;
     }}
 
-    /* Hover */
-    [data-testid="stSidebar"] .stRadio div[role="radiogroup"] label:hover {{
-        background-color: #FFF5F7 !important;
-        transform: scale(1.02);
-        transition: 0.2s;
-    }}
-
-    /* --- FORMULARIO --- */
+    /* --- FORMULARIO Y APARTADOS --- */
     .stContainer {{
         background-color: #FFFFFF !important;
         padding: 25px;
@@ -109,7 +96,6 @@ st.markdown(f"""
         font-size: 14px !important;
     }}
 
-    /* Inputs uniformes */
     .stInput input, .stSelectbox div[role="button"], .stDateInput div[data-baseweb="input"], .stNumberInput input {{
         height: 42px !important;
         border-radius: 12px !important;
@@ -121,10 +107,8 @@ st.markdown(f"""
 
 # --- SIDEBAR ---
 with st.sidebar:
-    # 1. Logo y Nombre
     st.markdown('<div class="header-sidebar">', unsafe_allow_html=True)
     try:
-        # Asegúrate de que el nombre sea exacto en GitHub
         st.image("Logo VK NEW blanco.PNG", width=110) 
     except:
         st.write("💎")
@@ -133,8 +117,6 @@ with st.sidebar:
     
     st.write("---")
     
-    # 2. Menú de píldoras blancas (Iconos a la izquierda)
-    # Importante: El texto aquí es el que sale dentro del botón
     menu = st.radio(
         "Navegación", 
         ["📈 INVERSIONES", "🛍️ VENTAS", "💰 GASTOS", "🔄 REINVERSIONES", "📊 DASHBOARD"], 
@@ -168,6 +150,7 @@ if "INVERSIONES" in menu:
     st.write("")
 
     with st.container():
+        # Fila 1
         c1, c2, c3 = st.columns(3)
         with c1:
             fecha_in = st.date_input("🗓️ Fecha", datetime.now())
@@ -176,10 +159,11 @@ if "INVERSIONES" in menu:
         with c3:
             cantidad = st.number_input("📦 Cantidad", min_value=1, step=1)
             
+        # Fila 2
         c4, c5, c6 = st.columns(3)
         with c4:
             categoria = st.selectbox("🏷️ Categoría", ["SHORTS", "TOPS", "ENTERIZOS", "BODYS", "LEGGINS", "VESTIDOS", "BLUSAS"])
-        with talla_col = c5: # Mantenemos estructura
+        with c5: # AQUÍ ESTABA EL ERROR: Corregido
             talla = st.selectbox("📏 Talla", ["XS", "S", "M", "L", "XL", "TALLA UNICA"])
         with c6:
             costo_u = st.number_input("💰 Costo unitario ($)", min_value=0.0)
