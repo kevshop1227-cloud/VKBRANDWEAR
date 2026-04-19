@@ -5,18 +5,9 @@ from datetime import datetime
 import time
 
 # --- CONFIGURACIÓN ---
-URL_API = "https://script.google.com/macros/s/AKfycbVJV038RRhcx66xnFSCgVSLSa_-mXgu9yxT5tk_il6ehYBdhc9clRgXewcks4U_6Nf/exec"
+URL_API = "https://script.google.com/macros/s/AKfycbzVJV038RRhcx66xnFSCgVSLSa_-mXgu9yxT5tk_il6ehYBdhc9clRgXewcks4U_6Nf/exec"
 
 st.set_page_config(page_title="VK BRANDWEAR", page_icon="💖", layout="wide")
-
-# --- 1. INICIALIZACIÓN DE CAMPOS LIMPIOS AL ENTRAR ---
-# Esto asegura que si es la primera vez que entras, todo esté vacío.
-if "input_prenda" not in st.session_state:
-    st.session_state.input_prenda = ""
-if "input_cantidad" not in st.session_state:
-    st.session_state.input_cantidad = 1
-if "input_costo" not in st.session_state:
-    st.session_state.input_costo = 0.0
 
 MESES_ES = {
     "January": "Enero", "February": "Febrero", "March": "Marzo",
@@ -29,18 +20,96 @@ MESES_ES = {
 st.markdown(f"""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
-    .stApp {{ background-color: #FDFDFD; font-family: 'Segoe UI', sans-serif; }}
-    [data-testid="stSidebar"] {{ background-color: #FF75A0; color: white; }}
-    [data-testid="stSidebar"] [data-testid="stVerticalBlock"] {{ text-align: center !important; align-items: center !important; }}
-    .logo-container {{ display: flex; justify-content: center; width: 100%; margin-top: -80px !important; margin-bottom: -10px !important; }}
-    [data-testid="stSidebar"] img {{ width: 110px !important; }}
-    .sidebar-brand {{ font-family: 'Segoe UI', sans-serif; font-size: 24px !important; color: white !important; font-weight: 700; letter-spacing: 1px; margin-top: 0px !important; margin-bottom: 25px !important; display: block; text-transform: uppercase; }}
-    .stContainer {{ background-color: #FFFFFF; padding: 25px; border-radius: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.04); border: 1px solid #F0F0F0; }}
-    .stInput input, .stSelectbox div[role="button"], .stDateInput div[data-baseweb="input"], .stNumberInput input {{ border-radius: 12px !important; border: 1px solid #EEE !important; height: 42px !important; background-color: #F9F9F9 !important; }}
-    div.stButton > button:first-child {{ background-color: #FF75A0 !important; color: white !important; border-radius: 25px !important; padding: 10px 40px !important; font-weight: 600 !important; border: none !important; }}
-    .stButton>button[kind="secondary"] {{ background-color: #FF1493 !important; color: white !important; border-radius: 25px !important; }}
-    .main-title {{ font-size: 28px !important; font-weight: 700 !important; color: #333; margin: 0 !important; }}
-    .total-card {{ background-color: #FFF0F5; padding: 12px 25px; border-radius: 15px; text-align: center; color: #FF75A0; font-weight: 600; border: 1px solid #FFD1DC; display: inline-block; margin-top: 20px; }}
+    
+    .stApp {{
+        background-color: #FDFDFD;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }}
+    
+    [data-testid="stSidebar"] {{
+        background-color: #FF75A0; 
+        color: white;
+    }}
+
+    [data-testid="stSidebar"] [data-testid="stVerticalBlock"] {{
+        text-align: center !important;
+        align-items: center !important;
+    }}
+
+    .logo-container {{
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        margin-top: -80px !important;
+        margin-bottom: -10px !important;
+    }}
+    
+    [data-testid="stSidebar"] img {{
+        width: 110px !important;
+    }}
+
+    .sidebar-brand {{
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-size: 24px !important;
+        color: white !important;
+        text-align: center !important;
+        width: 100%;
+        font-weight: 700;
+        letter-spacing: 1px;
+        margin-top: 0px !important;
+        margin-bottom: 25px !important;
+        display: block;
+        text-transform: uppercase;
+    }}
+
+    .stContainer {{
+        background-color: #FFFFFF;
+        padding: 25px;
+        border-radius: 20px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+        border: 1px solid #F0F0F0;
+    }}
+    
+    .stInput input, .stSelectbox div[role="button"], .stDateInput div[data-baseweb="input"], .stNumberInput input {{
+        border-radius: 12px !important;
+        border: 1px solid #EEE !important;
+        height: 42px !important;
+        background-color: #F9F9F9 !important;
+    }}
+
+    div.stButton > button:first-child {{
+        background-color: #FF75A0 !important;
+        color: white !important;
+        border-radius: 25px !important;
+        padding: 10px 40px !important;
+        font-weight: 600 !important;
+        border: none !important;
+    }}
+
+    .stButton>button[kind="secondary"] {{
+        background-color: #FF1493 !important;
+        color: white !important;
+        border-radius: 25px !important;
+    }}
+
+    .main-title {{
+        font-size: 28px !important;
+        font-weight: 700 !important;
+        color: #333;
+        margin: 0 !important;
+    }}
+    
+    .total-card {{
+        background-color: #FFF0F5;
+        padding: 12px 25px;
+        border-radius: 15px;
+        text-align: center;
+        color: #FF75A0;
+        font-weight: 600;
+        border: 1px solid #FFD1DC;
+        display: inline-block;
+        margin-top: 20px;
+    }}
     </style>
     """, unsafe_allow_html=True)
 
@@ -52,7 +121,9 @@ with st.sidebar:
     except:
         st.write("💎")
     st.markdown('</div>', unsafe_allow_html=True)
+    
     st.markdown('<p class="sidebar-brand">VK Brandwear</p>', unsafe_allow_html=True)
+    
     st.write("---")
     menu = st.radio("Navegación", ["INVERSIONES", "VENTAS", "GASTOS", "DASHBOARD"], label_visibility="collapsed")
 
@@ -73,28 +144,32 @@ except:
 if menu == "INVERSIONES":
     col_icon, col_txt = st.columns([0.06, 0.94])
     with col_icon:
-        try: st.image("INVERSIONES.png", width=45)
-        except: st.write("📁")
-    with col_txt: st.markdown('<p class="main-title">Registro de Inversiones</p>', unsafe_allow_html=True)
+        try:
+            st.image("INVERSIONES.png", width=45)
+        except:
+            st.write("📁")
+    with col_txt:
+        st.markdown('<p class="main-title">Registro de Inversiones</p>', unsafe_allow_html=True)
 
     st.write("")
 
-    # --- FORMULARIO CON LIMPIEZA TOTAL ---
+    # --- FORMULARIO CON LIMPIEZA AUTOMÁTICA ---
     with st.container():
         c1, c2, c3 = st.columns(3)
         with c1:
+            # La fecha usualmente se deja en el día actual
             fecha_in = st.date_input("🗓️ Fecha", datetime.now())
         with c2:
-            # Vinculamos el valor al session_state
+            # Usamos key para controlar el widget
             prenda = st.text_input("👗 Nombre prenda", placeholder="Ej: Short Negro Lazo", key="input_prenda").upper()
         with c3:
             cantidad = st.number_input("📦 Cantidad", min_value=1, step=1, key="input_cantidad")
             
         c4, c5, c6 = st.columns(3)
         with c4:
-            categoria = st.selectbox("🏷️ Categoría", ["SHORTS", "TOPS", "ENTERIZOS", "BODYS", "LEGGINS", "CHAQUETAS", "VESTIDOS", "BLUSAS"])
+            categoria = st.selectbox("🏷️ Categoría", ["SHORTS", "TOPS", "ENTERIZOS", "BODYS", "LEGGINS", "CHAQUETAS", "VESTIDOS", "BLUSAS"], key="input_cat")
         with c5:
-            talla = st.selectbox("📏 Talla", ["XS", "S", "M", "L", "XL", "TALLA UNICA"])
+            talla = st.selectbox("📏 Talla", ["XS", "S", "M", "L", "XL", "TALLA UNICA"], key="input_talla")
         with c6:
             costo_u = st.number_input("💰 Costo unitario ($)", min_value=0.0, key="input_costo")
         
@@ -104,25 +179,32 @@ if menu == "INVERSIONES":
         with btn_c1:
             if st.button("➕ AGREGAR INVENTARIO"):
                 if prenda:
-                    with st.spinner("Registrando en la base de datos..."):
+                    with st.spinner("Registrando..."):
                         mes = MESES_ES.get(fecha_in.strftime("%B"), fecha_in.strftime("%B"))
                         datos = {
-                            "action": "registrar_inversion", "fecha": str(fecha_in), "año": fecha_in.year, 
-                            "mes": mes, "categoria": categoria, "prenda": prenda, 
-                            "talla": talla, "cantidad": cantidad, "costo": costo_u
+                            "action": "registrar_inversion", 
+                            "fecha": str(fecha_in), 
+                            "año": fecha_input.year if 'fecha_input' in locals() else fecha_in.year, 
+                            "mes": mes, 
+                            "categoria": categoria, 
+                            "prenda": prenda, 
+                            "talla": talla, 
+                            "cantidad": cantidad, 
+                            "costo": costo_u
                         }
                         requests.post(URL_API, json=datos)
                         
-                        # --- LIMPIEZA DE LOS ESTADOS ---
-                        st.session_state.input_prenda = ""
-                        st.session_state.input_cantidad = 1
-                        st.session_state.input_costo = 0.0
+                        # --- LIMPIAR CAMPOS ---
+                        st.session_state["input_prenda"] = ""
+                        st.session_state["input_cantidad"] = 1
+                        st.session_state["input_costo"] = 0.0
+                        # Las selectbox vuelven al primer elemento automáticamente al resetear o al no tener valor previo
                         
                         st.success("¡Registrado con éxito!")
                         time.sleep(1)
-                        st.rerun() # Reinicia la interfaz con los valores del session_state limpios
+                        st.rerun() # Esto recarga la página y muestra los campos limpios
                 else:
-                    st.warning("⚠️ El nombre de la prenda es obligatorio.")
+                    st.error("Debes poner el nombre de la prenda.")
 
     # Tabla
     st.write("---")
@@ -131,8 +213,12 @@ if menu == "INVERSIONES":
     if not df_full.empty:
         cols_mostrar = ['FECHA', 'CATEGORIA', 'NOMBRE PRENDA', 'TALLA', 'STOCK ACTUAL', 'COSTO UNITARIO', 'COSTO TOTAL']
         seleccion = st.dataframe(
-            df_full, use_container_width=True, hide_index=True, column_order=cols_mostrar,
-            on_select="rerun", selection_mode="multi-row",
+            df_full,
+            use_container_width=True,
+            hide_index=True,
+            column_order=cols_mostrar,
+            on_select="rerun",
+            selection_mode="multi-row",
             column_config={
                 "FECHA": st.column_config.DateColumn("Fecha", format="YYYY/MM/DD"),
                 "COSTO UNITARIO": st.column_config.NumberColumn("Unit ($)", format="$ %d"),
