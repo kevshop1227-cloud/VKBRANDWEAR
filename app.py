@@ -5,12 +5,10 @@ from datetime import datetime
 import time
 
 # --- CONFIGURACIÓN ---
-# Asegúrate de que este link sea el último que generaste en Google Sheets
-URL_API = "https://script.google.com/macros/s/AKfycbz83hP0Hfd-SCwnfAQwujomUXFILQ7PnW0DOv5JmuLNmcjXR_-puUcmecdFNqWFLho/exec"
+URL_API = "https://script.google.com/macros/s/AKfycbzVJV038RRhcx66xnFSCgVSLSa_-mXgu9yxT5tk_il6ehYBdhc9clRgXewcks4U_6Nf/exec"
 
 st.set_page_config(page_title="VK BRANDWEAR", page_icon="💖", layout="wide")
 
-# Diccionario para traducir meses a español
 MESES_ES = {
     "January": "Enero", "February": "Febrero", "March": "Marzo",
     "April": "Abril", "May": "Mayo", "June": "Junio",
@@ -18,47 +16,29 @@ MESES_ES = {
     "October": "Octubre", "November": "Noviembre", "December": "Diciembre"
 }
 
-# --- ESTILOS PERSONALIZADOS VK ---
-st.markdown(f"""
+# --- ESTILOS PERSONALIZADOS ---
+st.markdown("""
     <style>
-    /* Fondo principal blanco */
-    .stApp {{ background-color: #FFFFFF; }}
+    .stApp { background-color: #FFFFFF; }
+    [data-testid="stSidebar"] { background-color: #FFB6C1; }
+    [data-testid="stSidebar"] * { color: white !important; font-weight: bold; }
+    h1, h2, h3, p, label { color: #000000 !important; font-weight: bold !important; }
     
-    /* Sidebar Rosado */
-    [data-testid="stSidebar"] {{
-        background-color: #FFB6C1;
-    }}
-    [data-testid="stSidebar"] * {{ color: white !important; font-weight: bold; }}
-
-    /* Letras en negrita y negro para el contenido */
-    h1, h2, h3, p, label, .stSelectbox, .stInput {{
-        color: #000000 !important;
-        font-weight: bold !important;
-    }}
-
-    /* Botón Ingresar (Rosado fuerte) */
-    div.stButton > button:first-child {{
+    div.stButton > button:first-child {
         background-color: #FF69B4;
         color: white;
-        border-radius: 20px;
-        border: None;
-    }}
+        border-radius: 15px;
+        width: 100%;
+        font-weight: bold;
+    }
     
-    /* Botón de eliminar (Rojo) */
-    div.stButton > button[kind="secondary"] {{
+    .stButton>button[kind="secondary"] {
         background-color: #FF4B4B;
         color: white;
-        border-radius: 10px;
-    }}
-
-    /* Título de Marca */
-    .brand-title {{
-        font-family: 'Cursive', sans-serif;
-        font-size: 40px;
-        text-align: center;
-        color: #FF1493;
-        margin-bottom: 0px;
-    }}
+        border-radius: 15px;
+        width: 100%;
+        font-weight: bold;
+    }
     </style>
     """, unsafe_allow_html=True)
 
@@ -67,114 +47,94 @@ with st.sidebar:
     try:
         st.image("Logo VK NEW blanco.jpg", width=200)
     except:
-        st.write("💎") # Si no encuentra el logo
-    
-    st.markdown('<p class="brand-title">VK BRANDWEAR</p>', unsafe_allow_html=True)
-    st.write("---")
-    menu = st.radio("MENÚ DE CONTROL", ["INVERSIONES", "VENTAS", "GASTOS", "DASHBOARD"])
+        st.write("💎")
+    st.title("VK BRANDWEAR")
+    menu = st.sidebar.radio("MENÚ DE CONTROL", ["INVERSIONES", "VENTAS", "GASTOS", "DASHBOARD"])
 
-# --- ANIMACIÓN DE CORAZONES ---
-def animacion_corazones():
-    placeholder = st.empty()
-    for _ in range(2):
-        placeholder.markdown("<h2 style='text-align: center;'>💖 💗 💞 💓</h2>", unsafe_allow_html=True)
-        time.sleep(0.3)
-        placeholder.empty()
-
-# --- SECCIÓN: INVERSIONES ---
 if menu == "INVERSIONES":
-    animacion_corazones()
     st.title("💖 REGISTRO DE INVERSIONES")
 
-    # Formulario
+    # 1. Formulario
     with st.container():
-        col1, col2 = st.columns(2)
+        col1, col2, col3 = st.columns(3)
         with col1:
-            fecha = st.date_input("FECHA", datetime.now())
-            categoria = st.selectbox("CATEGORÍA", 
-                ["SHORTS", "TOPS", "ENTERIZOS", "BODYS", "LEGGINS", "CHAQUETAS", "CAMISAS", "VESTIDOS", "PANTALONETAS", "FALDAS", "BLUSAS"])
-            prenda = st.text_input("NOMBRE PRENDA").upper()
-        
+            fecha_input = st.date_input("FECHA", datetime.now())
+            categoria = st.selectbox("CATEGORÍA", ["SHORTS", "TOPS", "ENTERIZOS", "BODYS", "LEGGINS", "CHAQUETAS", "CAMISAS", "VESTIDOS", "PANTALONETAS", "FALDAS", "BLUSAS"])
         with col2:
-            talla = st.selectbox("TALLA", ["XS", "S", "M", "L", "XL", "XXL", "XXXL", "TALLA UNICA"])
+            prenda = st.text_input("NOMBRE PRENDA").upper()
+            talla = st.selectbox("TALLA", ["XS", "S", "M", "L", "XL", "TALLA UNICA"])
+        with col3:
             cantidad = st.number_input("CANTIDAD", min_value=1, step=1)
-            costo = st.number_input("COSTO UNITARIO ($)", min_value=0.0)
+            costo_u = st.number_input("COSTO UNITARIO ($)", min_value=0.0)
 
-    # Botón de Registro
-    if st.button("➕ INGRESAR INVENTARIO"):
-        if prenda:
-            mes_ingles = fecha.strftime("%B")
-            mes_es = MESES_ES.get(mes_ingles, mes_ingles)
-            
-            datos = {
-                "action": "registrar_inversion",
-                "fecha": str(fecha), 
-                "año": fecha.year, 
-                "mes": mes_es,
-                "categoria": categoria, 
-                "prenda": prenda, 
-                "talla": talla,
-                "cantidad": cantidad, 
-                "costo": costo
-            }
-            res = requests.post(URL_API, json=datos)
-            if res.status_code == 200:
-                st.success(f"¡{prenda} añadida al inventario!")
-                st.balloons()
+    # --- LECTURA DE DATOS DESDE EXCEL ---
+    try:
+        response = requests.post(URL_API, json={"action": "leer_inventario"})
+        inv_data = response.json()
+        if len(inv_data) > 1:
+            # Ahora el DataFrame carga automáticamente la columna "COSTO TOTAL" desde el Excel
+            df_full = pd.DataFrame(inv_data[1:], columns=inv_data[0])
+            df_full['FECHA'] = df_full['FECHA'].apply(lambda x: str(x)[:10].replace("-", "/"))
+        else:
+            df_full = pd.DataFrame()
+    except:
+        df_full = pd.DataFrame()
+
+    # 2. FILA DE BOTONES
+    st.write("")
+    col_btn1, col_btn2, col_btn3 = st.columns([1, 1, 1])
+    
+    with col_btn1:
+        if st.button("➕ INGRESAR INVENTARIO"):
+            if prenda:
+                mes_es = MESES_ES.get(fecha_input.strftime("%B"), fecha_input.strftime("%B"))
+                datos = {
+                    "action": "registrar_inversion",
+                    "fecha": str(fecha_input), "año": fecha_input.year, "mes": mes_es,
+                    "categoria": categoria, "prenda": prenda, "talla": talla,
+                    "cantidad": cantidad, "costo": costo_u
+                }
+                requests.post(URL_API, json=datos)
+                st.success("¡Guardado en Excel!")
                 time.sleep(1)
                 st.rerun()
-        else:
-            st.warning("Escribe el nombre de la prenda.")
 
-    # --- TABLA DE INVENTARIO ---
+    # 3. TABLA Y ELIMINACIÓN
     st.write("---")
     st.subheader("📋 INVENTARIO REGISTRADO")
-    st.write("Selecciona las filas que desees eliminar:")
 
-    try:
-        response = requests.post(URL_API, json={"action": "leer_inventario"}, timeout=10)
+    if not df_full.empty:
+        # Aquí definimos el orden exacto incluyendo la nueva columna que viene del Excel
+        cols_mostrar = ['FECHA', 'CATEGORIA', 'NOMBRE PRENDA', 'TALLA', 'STOCK ACTUAL', 'COSTO UNITARIO', 'COSTO TOTAL']
         
-        if response.status_code == 200:
-            inv_data = response.json()
-            
-            if len(inv_data) > 1:
-                df = pd.DataFrame(inv_data[1:], columns=inv_data[0])
-                
-                # TABLA INTERACTIVA CORREGIDA (multi-row con guion medio)
-                seleccion = st.dataframe(
-                    df, 
-                    use_container_width=True, 
-                    hide_index=True,
-                    on_select="rerun",
-                    selection_mode="multi-row",
-                    column_config={
-                        "COSTO UNITARIO": st.column_config.NumberColumn("COSTO ($)", format="$ %d"),
-                        "STOCK ACTUAL": st.column_config.NumberColumn("STOCK")
-                    }
-                )
+        seleccion = st.dataframe(
+            df_full,
+            use_container_width=True,
+            hide_index=True,
+            column_order=cols_mostrar,
+            on_select="rerun",
+            selection_mode="multi-row",
+            column_config={
+                "COSTO UNITARIO": st.column_config.NumberColumn("UNITARIO ($)", format="$ %d"),
+                "COSTO TOTAL": st.column_config.NumberColumn("TOTAL ($)", format="$ %d"),
+                "STOCK ACTUAL": "STOCK"
+            }
+        )
 
-                # Lógica para Eliminar
-                filas_seleccionadas = seleccion.selection.rows
-                if filas_seleccionadas:
-                    st.warning(f"Has seleccionado {len(filas_seleccionadas)} fila(s).")
-                    if st.button("🗑️ ELIMINAR SELECCIONADOS", type="secondary"):
-                        with st.spinner("Eliminando de Google Sheets..."):
-                            for idx in filas_seleccionadas:
-                                fila = df.iloc[idx]
-                                borrar = {
-                                    "action": "eliminar_inversion",
-                                    "prenda": fila["NOMBRE PRENDA"],
-                                    "talla": fila["TALLA"],
-                                    "fecha": str(fila["FECHA"])[:10]
-                                }
-                                requests.post(URL_API, json=borrar)
-                            st.error("¡Registros eliminados!")
-                            time.sleep(1)
-                            st.rerun()
-            else:
-                st.info("El inventario está vacío.")
-        else:
-            st.error("No se pudo conectar con Google Sheets.")
-            
-    except Exception as e:
-        st.info("Cargando tabla desde Google Sheets...")
+        # Botón de Eliminar dinámico
+        filas_selec = seleccion.selection.rows
+        if filas_selec:
+            with col_btn2:
+                if st.button(f"🗑️ ELIMINAR ({len(filas_selec)})", type="secondary"):
+                    for i in filas_selec:
+                        fila = df_full.iloc[i]
+                        borrar = {
+                            "action": "eliminar_inversion",
+                            "prenda": fila["NOMBRE PRENDA"],
+                            "talla": fila["TALLA"],
+                            "fecha": fila["FECHA"].replace("/", "-")
+                        }
+                        requests.post(URL_API, json=borrar)
+                    st.rerun()
+    else:
+        st.info("No hay registros aún.")
