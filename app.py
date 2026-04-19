@@ -19,7 +19,6 @@ MESES_ES = {
 # --- DISEÑO DE ALTA GAMA VK (CSS) ---
 st.markdown(f"""
     <style>
-    /* Fuente Segoe UI para toda la app y la marca */
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
     
     .stApp {{
@@ -27,24 +26,21 @@ st.markdown(f"""
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }}
     
-    /* Sidebar Rosa VK */
     [data-testid="stSidebar"] {{
         background-color: #FF75A0; 
         color: white;
     }}
 
-    /* CENTRADO DE SIDEBAR */
     [data-testid="stSidebar"] [data-testid="stVerticalBlock"] {{
         text-align: center !important;
         align-items: center !important;
     }}
 
-    /* Contenedor del Logo: Mucho más arriba y centrado */
     .logo-container {{
         display: flex;
         justify-content: center;
         width: 100%;
-        margin-top: -80px !important; /* Lo sube casi al borde superior */
+        margin-top: -80px !important;
         margin-bottom: -10px !important;
     }}
     
@@ -52,7 +48,6 @@ st.markdown(f"""
         width: 110px !important;
     }}
 
-    /* Nombre de la marca: Segoe UI, debajo del logo */
     .sidebar-brand {{
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         font-size: 24px !important;
@@ -67,7 +62,6 @@ st.markdown(f"""
         text-transform: uppercase;
     }}
 
-    /* Contenedores Blancos Redondeados */
     .stContainer {{
         background-color: #FFFFFF;
         padding: 25px;
@@ -76,7 +70,6 @@ st.markdown(f"""
         border: 1px solid #F0F0F0;
     }}
     
-    /* UNIFORMIDAD DE INPUTS */
     .stInput input, .stSelectbox div[role="button"], .stDateInput div[data-baseweb="input"], .stNumberInput input {{
         border-radius: 12px !important;
         border: 1px solid #EEE !important;
@@ -84,7 +77,6 @@ st.markdown(f"""
         background-color: #F9F9F9 !important;
     }}
 
-    /* Botones Estilizados */
     div.stButton > button:first-child {{
         background-color: #FF75A0 !important;
         color: white !important;
@@ -100,7 +92,6 @@ st.markdown(f"""
         border-radius: 25px !important;
     }}
 
-    /* Encabezado Principal */
     .main-title {{
         font-size: 28px !important;
         font-weight: 700 !important;
@@ -108,7 +99,6 @@ st.markdown(f"""
         margin: 0 !important;
     }}
     
-    /* Card del Total Invertido */
     .total-card {{
         background-color: #FFF0F5;
         padding: 12px 25px;
@@ -125,16 +115,13 @@ st.markdown(f"""
 
 # --- SIDEBAR ---
 with st.sidebar:
-    # 1. Logo (Subido y centrado)
     st.markdown('<div class="logo-container">', unsafe_allow_html=True)
     try:
-        # Asegúrate de que el nombre sea exacto como en GitHub
         st.image("Logo VK NEW blanco.PNG") 
     except:
         st.write("💎")
     st.markdown('</div>', unsafe_allow_html=True)
     
-    # 2. Nombre de la marca (Segoe UI)
     st.markdown('<p class="sidebar-brand">VK Brandwear</p>', unsafe_allow_html=True)
     
     st.write("---")
@@ -155,7 +142,6 @@ except:
 
 # --- MÓDULO INVERSIONES ---
 if menu == "INVERSIONES":
-    # Encabezado corregido para que el icono salga siempre
     col_icon, col_txt = st.columns([0.06, 0.94])
     with col_icon:
         try:
@@ -167,23 +153,25 @@ if menu == "INVERSIONES":
 
     st.write("")
 
-    # Formulario Simétrico
+    # --- FORMULARIO CON LIMPIEZA AUTOMÁTICA ---
     with st.container():
         c1, c2, c3 = st.columns(3)
         with c1:
+            # La fecha usualmente se deja en el día actual
             fecha_in = st.date_input("🗓️ Fecha", datetime.now())
         with c2:
-            prenda = st.text_input("👗 Nombre prenda", placeholder="Ej: Short Negro Lazo").upper()
+            # Usamos key para controlar el widget
+            prenda = st.text_input("👗 Nombre prenda", placeholder="Ej: Short Negro Lazo", key="input_prenda").upper()
         with c3:
-            cantidad = st.number_input("📦 Cantidad", min_value=1, step=1)
+            cantidad = st.number_input("📦 Cantidad", min_value=1, step=1, key="input_cantidad")
             
         c4, c5, c6 = st.columns(3)
         with c4:
-            categoria = st.selectbox("🏷️ Categoría", ["SHORTS", "TOPS", "ENTERIZOS", "BODYS", "LEGGINS", "CHAQUETAS", "VESTIDOS", "BLUSAS"])
+            categoria = st.selectbox("🏷️ Categoría", ["SHORTS", "TOPS", "ENTERIZOS", "BODYS", "LEGGINS", "CHAQUETAS", "VESTIDOS", "BLUSAS"], key="input_cat")
         with c5:
-            talla = st.selectbox("📏 Talla", ["XS", "S", "M", "L", "XL", "TALLA UNICA"])
+            talla = st.selectbox("📏 Talla", ["XS", "S", "M", "L", "XL", "TALLA UNICA"], key="input_talla")
         with c6:
-            costo_u = st.number_input("💰 Costo unitario ($)", min_value=0.0)
+            costo_u = st.number_input("💰 Costo unitario ($)", min_value=0.0, key="input_costo")
         
         st.write("")
         btn_c1, btn_c2, _ = st.columns([1, 1, 1])
@@ -191,12 +179,32 @@ if menu == "INVERSIONES":
         with btn_c1:
             if st.button("➕ AGREGAR INVENTARIO"):
                 if prenda:
-                    mes = MESES_ES.get(fecha_in.strftime("%B"), fecha_in.strftime("%B"))
-                    datos = {"action": "registrar_inversion", "fecha": str(fecha_in), "año": fecha_in.year, "mes": mes, "categoria": categoria, "prenda": prenda, "talla": talla, "cantidad": cantidad, "costo": costo_u}
-                    requests.post(URL_API, json=datos)
-                    st.success("¡Registrado!")
-                    time.sleep(1)
-                    st.rerun()
+                    with st.spinner("Registrando..."):
+                        mes = MESES_ES.get(fecha_in.strftime("%B"), fecha_in.strftime("%B"))
+                        datos = {
+                            "action": "registrar_inversion", 
+                            "fecha": str(fecha_in), 
+                            "año": fecha_input.year if 'fecha_input' in locals() else fecha_in.year, 
+                            "mes": mes, 
+                            "categoria": categoria, 
+                            "prenda": prenda, 
+                            "talla": talla, 
+                            "cantidad": cantidad, 
+                            "costo": costo_u
+                        }
+                        requests.post(URL_API, json=datos)
+                        
+                        # --- LIMPIAR CAMPOS ---
+                        st.session_state["input_prenda"] = ""
+                        st.session_state["input_cantidad"] = 1
+                        st.session_state["input_costo"] = 0.0
+                        # Las selectbox vuelven al primer elemento automáticamente al resetear o al no tener valor previo
+                        
+                        st.success("¡Registrado con éxito!")
+                        time.sleep(1)
+                        st.rerun() # Esto recarga la página y muestra los campos limpios
+                else:
+                    st.error("Debes poner el nombre de la prenda.")
 
     # Tabla
     st.write("---")
