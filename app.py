@@ -44,22 +44,58 @@ st.markdown(f"""
         width: 110px !important;
     }}
 
-    /* Nombre de la marca en Segoe UI */
+    /* Nombre de la marca */
     .sidebar-brand {{
         font-family: 'Segoe UI', sans-serif;
         font-size: 24px !important;
         color: white !important;
         text-align: center !important;
-        width: 100%;
         font-weight: 800;
         letter-spacing: 1.5px;
         margin-top: 0px !important;
         margin-bottom: 25px !important;
-        display: block;
         text-transform: uppercase;
     }}
 
-    /* CONTENEDOR DE APARTADOS (BLANCO) */
+    /* --- ESTILO DEL MENÚ (COMO EL BOTÓN QUE PEDISTE) --- */
+    [data-testid="stSidebar"] .stRadio div[role="radiogroup"] {{
+        gap: 15px; /* Espacio entre botones */
+    }}
+
+    /* Estilo de cada "botón" del menú */
+    [data-testid="stSidebar"] .stRadio div[role="radiogroup"] label {{
+        background-color: white !important; /* Fondo blanco */
+        color: #FF75A0 !important; /* Texto rosado */
+        border-radius: 30px !important; /* Muy redondeado como el ejemplo */
+        padding: 10px 20px !important;
+        font-weight: 700 !important;
+        width: 100% !important;
+        border: none !important;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        cursor: pointer;
+    }}
+
+    /* Ocultar el circulito feo del radio button */
+    [data-testid="stSidebar"] .stRadio div[role="radiogroup"] label div:first-child {{
+        display: none !important;
+    }}
+
+    /* Alineación del texto e icono dentro del botón */
+    [data-testid="stSidebar"] .stRadio div[role="radiogroup"] label div[data-testid="stMarkdownContainer"] p {{
+        margin-left: 0px !important;
+        font-size: 14px !important;
+    }}
+
+    /* Color cuando pasas el mouse (efecto hover) */
+    [data-testid="stSidebar"] .stRadio div[role="radiogroup"] label:hover {{
+        background-color: #FFF0F5 !important;
+        transform: scale(1.02);
+        transition: 0.2s;
+    }}
+
+    /* --- FIN ESTILO MENÚ --- */
+
+    /* Contenedor de Apartados Blanco */
     .stContainer {{
         background-color: #FFFFFF !important;
         padding: 30px;
@@ -68,39 +104,26 @@ st.markdown(f"""
         border: 1px solid #F0F0F0;
     }}
 
-    /* NOMBRE DE LOS APARTADOS (ROSADO) */
+    /* Nombre de los apartados del formulario (rosado) */
     label[data-testid="stWidgetLabel"] p {{
         color: #FF75A0 !important;
         font-weight: 700 !important;
         font-size: 15px !important;
         text-transform: uppercase;
-        letter-spacing: 0.5px;
     }}
     
-    /* Inputs uniformes */
-    .stInput input, .stSelectbox div[role="button"], .stDateInput div[data-baseweb="input"], .stNumberInput input {{
-        border-radius: 12px !important;
-        border: 1px solid #EEE !important;
-        height: 42px !important;
-        background-color: #FAFAFA !important;
-    }}
-
-    /* Botones */
+    /* Botón AGREGAR */
     div.stButton > button:first-child {{
         background-color: #FF75A0 !important;
         color: white !important;
         border-radius: 25px !important;
-        padding: 10px 40px !important;
         font-weight: 700 !important;
-        border: none !important;
     }}
 
-    /* Título principal */
     .main-title {{
         font-size: 28px !important;
         font-weight: 800 !important;
         color: #333;
-        margin: 0 !important;
     }}
     </style>
     """, unsafe_allow_html=True)
@@ -116,9 +139,15 @@ with st.sidebar:
     
     st.markdown('<p class="sidebar-brand">VK Brandwear</p>', unsafe_allow_html=True)
     st.write("---")
-    menu = st.radio("Navegación", ["INVERSIONES", "VENTAS", "GASTOS", "DASHBOARD"], label_visibility="collapsed")
+    
+    # Menú con iconos integrados al lado izquierdo
+    menu = st.radio(
+        "Navegación", 
+        ["📈 INVERSIONES", "🛍️ VENTAS", "💰 GASTOS", "📊 DASHBOARD"], 
+        label_visibility="collapsed"
+    )
 
-# --- CARGA DE DATOS ---
+# --- LÓGICA DE CARGA DE DATOS ---
 df_full = pd.DataFrame()
 try:
     response = requests.post(URL_API, json={"action": "leer_inventario"}, timeout=15)
@@ -132,8 +161,7 @@ except:
     pass
 
 # --- MÓDULO INVERSIONES ---
-if menu == "INVERSIONES":
-    # Cabecera
+if "INVERSIONES" in menu:
     col_icon, col_txt = st.columns([0.06, 0.94])
     with col_icon:
         try:
@@ -145,7 +173,6 @@ if menu == "INVERSIONES":
 
     st.write("")
 
-    # APARTADOS CON LOGOS PEQUEÑOS Y LETRA ROSADA
     with st.container():
         c1, c2, c3 = st.columns(3)
         with c1:
