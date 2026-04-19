@@ -16,98 +16,165 @@ MESES_ES = {
     "October": "Octubre", "November": "Noviembre", "December": "Diciembre"
 }
 
-# --- ESTILOS PERSONALIZADOS VK ---
-st.markdown("""
+# --- DISEÑO PROFESIONAL VK (CSS) ---
+st.markdown(f"""
     <style>
-    .stApp { background-color: #FFFFFF; }
-    [data-testid="stSidebar"] { background-color: #FFB6C1; }
-    [data-testid="stSidebar"] * { color: white !important; font-weight: bold; }
-    h1, h2, h3, p, label { color: #000000 !important; font-weight: bold !important; }
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
     
-    /* Botón Ingresar */
-    div.stButton > button:first-child {
-        background-color: #FF69B4;
-        color: white;
-        border-radius: 15px;
-        width: 100%;
-        font-weight: bold;
-    }
+    .stApp {{
+        background-color: #FDFDFD;
+        font-family: 'Poppins', sans-serif;
+    }}
     
-    /* Botón Eliminar Estilo Rosa fuerte/Rojo */
-    .stButton>button[kind="secondary"] {
-        background-color: #FF1493;
+    /* Sidebar Rosa VK */
+    [data-testid="stSidebar"] {{
+        background-color: #FF75A0; 
         color: white;
+    }}
+    [data-testid="stSidebar"] * {{ color: white !important; font-weight: 600; }}
+    
+    /* Sidebar Logo y Título */
+    .sidebar-title {{
+        font-size: 22px;
+        text-align: center;
+        font-weight: 600;
+        margin-top: -20px;
+    }}
+    .sidebar-sub {{
+        font-size: 12px;
+        text-align: center;
+        font-weight: 300;
+        margin-bottom: 20px;
+    }}
+
+    /* Contenedores Blancos Redondeados */
+    div[data-testid="stVerticalBlock"] > div.element-container > div.stMarkdown > div.stContainer {{
+        background-color: #FFFFFF;
+        padding: 20px;
+        border-radius: 20px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        border: 1px solid #F0F0F0;
+    }}
+    
+    /* Inputs Estilizados */
+    .stInput input, .stSelectbox div[role="button"], .stDateInput div, .stNumberInput input {{
+        border-radius: 12px !important;
+        border: 1px solid #EEE !important;
+        padding: 8px !important;
+    }}
+
+    /* Botón AGREGAR (Rosa) */
+    div.stButton > button:first-child {{
+        background-color: #FF75A0 !important;
+        color: white !important;
+        border-radius: 25px !important;
+        padding: 12px 30px !important;
+        font-weight: 600 !important;
+        border: none !important;
+        box-shadow: 0 4px 10px rgba(255,117,160,0.3);
+    }}
+
+    /* Botón ELIMINAR (Rosa fuerte) */
+    .stButton>button[kind="secondary"] {{
+        background-color: #FF1493 !important;
+        color: white !important;
+        border-radius: 25px !important;
+        padding: 12px 30px !important;
+        font-weight: 600 !important;
+        border: none !important;
+    }}
+
+    /* Tabla Estilizada */
+    [data-testid="stDataFrame"] {{
+        border-radius: 15px !important;
+        overflow: hidden !important;
+    }}
+    
+    /* KPI Card para el Total Invertido abajo */
+    .total-card {{
+        background-color: #FFF0F5;
+        padding: 10px 20px;
         border-radius: 15px;
-        width: 100%;
-        font-weight: bold;
-    }
+        text-align: center;
+        color: #FF75A0;
+        font-weight: 600;
+        margin-top: 10px;
+        border: 1px solid #FFD1DC;
+        display: inline-block;
+    }}
     </style>
     """, unsafe_allow_html=True)
 
 # --- SIDEBAR ---
 with st.sidebar:
     try:
-        st.image("Logo VK NEW blanco.jpg", width=200)
+        st.image("Logo VK NEW blanco.png", width=160)
     except:
         st.write("💎")
-    st.title("VK BRANDWEAR")
-    menu = st.radio("MENÚ", ["INVERSIONES", "VENTAS", "GASTOS", "DASHBOARD"])
+    st.markdown('<p class="sidebar-title">VK BRANDWEAR</p>', unsafe_allow_html=True)
+    st.markdown('<p class="sidebar-sub">Moda que te representa ✨</p>', unsafe_allow_html=True)
+    st.write("---")
+    menu = st.radio("MENÚ", ["📈 INVERSIONES", "🛍️ VENTAS", "💰 GASTOS", "📊 DASHBOARD"], label_visibility="collapsed")
 
-# --- SECCIÓN: INVERSIONES ---
-if menu == "INVERSIONES":
-    st.title("💖 REGISTRO DE INVERSIONES")
+# --- CARGA DE DATOS ---
+df_full = pd.DataFrame()
+try:
+    response = requests.post(URL_API, json={"action": "leer_inventario"}, timeout=15)
+    if response.status_code == 200:
+        inv_data = response.json()
+        if len(inv_data) > 1:
+            df_full = pd.DataFrame(inv_data[1:], columns=inv_data[0])
+            df_full['FECHA_RAW'] = df_full['FECHA'].astype(str).apply(lambda x: x[:10])
+            df_full['FECHA'] = df_full['FECHA_RAW'].apply(lambda x: x.replace("-", "/"))
+except:
+    pass
 
-    # Formulario
+# --- MÓDULO INVERSIONES ---
+if "INVERSIONES" in menu:
+    # Encabezado con imagen INVERSIONES.PNG
+    col_h1, col_h2 = st.columns([0.1, 0.9])
+    with col_h1:
+        try:
+            st.image("INVERSIONES.PNG", width=60)
+        except:
+            st.write("📁")
+    with col_h2:
+        st.markdown("<h1 style='margin-bottom:0;'>Registro de Inversiones</h1>", unsafe_allow_html=True)
+        st.markdown("<p style='color:#888; margin-top:0;'>Administra y lleva el control de tus inversiones en inventario.</p>", unsafe_allow_html=True)
+
+    # Formulario en contenedor blanco
     with st.container():
+        st.write("") # Espacio
         col1, col2, col3 = st.columns(3)
         with col1:
-            fecha_input = st.date_input("FECHA", datetime.now())
-            categoria = st.selectbox("CATEGORÍA", ["SHORTS", "TOPS", "ENTERIZOS", "BODYS", "LEGGINS", "CHAQUETAS", "CAMISAS", "VESTIDOS", "PANTALONETAS", "FALDAS", "BLUSAS"])
+            fecha_in = st.date_input("📅 Fecha", datetime.now())
+            categoria = st.selectbox("🏷️ Categoría", ["SHORTS", "TOPS", "ENTERIZOS", "BODYS", "LEGGINS", "CHAQUETAS", "VESTIDOS", "BLUSAS"])
         with col2:
-            prenda = st.text_input("NOMBRE PRENDA").upper()
-            talla = st.selectbox("TALLA", ["XS", "S", "M", "L", "XL", "TALLA UNICA"])
+            prenda = st.text_input("👗 Nombre prenda", placeholder="Ej: Short Negro Lazo").upper()
+            talla = st.selectbox("📏 Talla", ["XS", "S", "M", "L", "XL", "TALLA UNICA"])
         with col3:
-            cantidad = st.number_input("CANTIDAD", min_value=1, step=1)
-            costo_u = st.number_input("COSTO UNITARIO ($)", min_value=0.0)
+            cantidad = st.number_input("📦 Cantidad", min_value=1, step=1)
+            costo_u = st.number_input("💰 Costo unitario ($)", min_value=0.0)
+        
+        st.write("")
+        c_btn1, c_btn2, _ = st.columns([1, 1, 1])
+        
+        with c_btn1:
+            if st.button("➕ AGREGAR INVENTARIO"):
+                if prenda:
+                    mes = MESES_ES.get(fecha_in.strftime("%B"), fecha_in.strftime("%B"))
+                    datos = {"action": "registrar_inversion", "fecha": str(fecha_in), "año": fecha_in.year, "mes": mes, "categoria": categoria, "prenda": prenda, "talla": talla, "cantidad": cantidad, "costo": costo_u}
+                    requests.post(URL_API, json=datos)
+                    st.success("¡Agregado!")
+                    time.sleep(1)
+                    st.rerun()
 
-    # Carga de datos previa
-    df_full = pd.DataFrame()
-    try:
-        response = requests.post(URL_API, json={"action": "leer_inventario"}, timeout=10)
-        if response.status_code == 200:
-            inv_data = response.json()
-            if len(inv_data) > 1:
-                df_full = pd.DataFrame(inv_data[1:], columns=inv_data[0])
-                # Formato de fecha para mostrar en tabla AAAA/MM/DD
-                df_full['FECHA_DISPLAY'] = df_full['FECHA'].apply(lambda x: str(x)[:10].replace("-", "/"))
-    except:
-        pass
-
-    # Fila de Botones
-    st.write("")
-    c_btn1, c_btn2, _ = st.columns([1, 1, 1])
-    
-    with c_btn1:
-        if st.button("➕ INGRESAR INVENTARIO"):
-            if prenda:
-                mes_es = MESES_ES.get(fecha_input.strftime("%B"), fecha_input.strftime("%B"))
-                datos = {
-                    "action": "registrar_inversion",
-                    "fecha": str(fecha_input), "año": fecha_input.year, "mes": mes_es,
-                    "categoria": categoria, "prenda": prenda, "talla": talla,
-                    "cantidad": cantidad, "costo": costo_u
-                }
-                requests.post(URL_API, json=datos)
-                st.success("¡Registrado!")
-                time.sleep(1)
-                st.rerun()
-
+    # Tabla de Inventario
     st.write("---")
-    st.subheader("📋 INVENTARIO REGISTRADO")
-
+    st.markdown("### 📋 Inventario Registrado")
+    
     if not df_full.empty:
-        # Columnas a mostrar
-        cols_mostrar = ['FECHA_DISPLAY', 'CATEGORIA', 'NOMBRE PRENDA', 'TALLA', 'STOCK ACTUAL', 'COSTO UNITARIO', 'COSTO TOTAL']
+        cols_mostrar = ['FECHA', 'CATEGORIA', 'NOMBRE PRENDA', 'TALLA', 'STOCK ACTUAL', 'COSTO UNITARIO', 'COSTO TOTAL']
         
         seleccion = st.dataframe(
             df_full,
@@ -117,29 +184,23 @@ if menu == "INVERSIONES":
             on_select="rerun",
             selection_mode="multi-row",
             column_config={
-                "FECHA_DISPLAY": "FECHA",
-                "COSTO UNITARIO": st.column_config.NumberColumn("UNIT ($)", format="$ %d"),
-                "COSTO TOTAL": st.column_config.NumberColumn("TOTAL ($)", format="$ %d"),
-                "STOCK ACTUAL": "STOCK"
+                "COSTO UNITARIO": st.column_config.NumberColumn("Unit ($)", format="$ %d"),
+                "COSTO TOTAL": st.column_config.NumberColumn("Total ($)", format="$ %d")
             }
         )
 
-        # Botón Eliminar dinámico
+        # Total invertido card al final
+        total_inv = df_full['COSTO TOTAL'].sum()
+        st.markdown(f'<div class="total-card">🛍️ Total invertido: ${total_inv:,.0f}</div>', unsafe_allow_html=True)
+
+        # Botón Eliminar junto al de Agregar (arriba)
         filas_selec = seleccion.selection.rows
         if filas_selec:
             with c_btn2:
                 if st.button(f"🗑️ ELIMINAR ({len(filas_selec)})", type="secondary"):
                     for i in filas_selec:
                         fila = df_full.iloc[i]
-                        # Enviamos la fecha original con guiones para la búsqueda
-                        fecha_busqueda = str(fila["FECHA"])[:10]
-                        borrar = {
-                            "action": "eliminar_inversion",
-                            "prenda": fila["NOMBRE PRENDA"],
-                            "talla": fila["TALLA"],
-                            "fecha": fecha_busqueda
-                        }
-                        requests.post(URL_API, json=borrar)
+                        requests.post(URL_API, json={"action": "eliminar_inversion", "prenda": fila["NOMBRE PRENDA"], "talla": fila["TALLA"], "fecha": fila["FECHA_RAW"]})
                     st.rerun()
     else:
-        st.info("No hay registros aún.")
+        st.info("No hay registros en el inventario.")
